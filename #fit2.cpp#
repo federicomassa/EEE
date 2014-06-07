@@ -1,0 +1,132 @@
+using namespace std;
+
+class triplet{
+private:
+  double x[3];
+  double y[3];
+  double z[3];
+  double xerr[3];
+  double yerr[3];
+  double zerr[3];
+  TF1* xyfitfunc;
+  TGraphErrors* xygraph;
+  TF1* xzfitfunc;  xygraph->GetXaxis()->SetTitle("x [cm]");
+  xygraph->GetYaxis()->SetTi  xygraph->GetXaxis()->SetTitle("x [cm]");
+  xygraph->GetYaxis()->SetTitle("y [cm]");
+  xygraph->GetXaxis()->CenterTitle();
+  xygraph->GetYaxis()->CenterTitle();  xygraph->GetXaxis()->SetTitle("x [cm]");
+  xygraph->GetYaxis()->SetTitle("y [cm]");
+  xygraph->GetXaxis()->CenterTitle();
+  xygraph->GetYaxis()->CenterTitle();tle("y [cm]");
+  xygraph->GetXaxis()->CenterTitle();
+  xygraph->GetYaxis()->CenterTitle();
+  TGraphErrors* xzgraph;
+  TF1* yzfitfunc;
+  TGraphErrors* yzgraph;
+public:
+  double XYGetChisquare(){return (xyfitfunc->GetChisquare());}
+  double XYGetParameter(int i){return (xyfitfunc->GetParameter(i));}
+  double XZGetChisquare(){return (xzfitfunc->GetChisquare());}
+  double XZGetParameter(int i){return (xzfitfunc->GetParameter(i));}
+  double YZGetChisquare(){return (yzfitfunc->GetChisquare());}
+  double YZGetParameter(int i){return (yzfitfunc->GetParameter(i));}
+  
+  triplet(double x1[3], double x2[3], double x3[3]){
+    x[0] = x1[0]; x[1] = x2[0]; x[2] = x3[0];
+    y[0] = x1[1]; y[1] = x2[1]; y[2] = x3[1];
+    z[0] = x1[2]; z[1] = x2[2]; z[2] = x3[2];
+    for (int i = 0; i < 3;i++) {yerr[i] = 0.05; xerr[i] = 0.05;zerr[i] = 0.05;}};  //incertezze di default
+
+  void SetErr(double ex[3],double ey[3], double ez[3]){xerr = ex; yerr = ey;zerr = ez;};
+
+  void XYFit(){   
+    if (xerr[0] == 0 && xerr[1] == 0 && xerr[2] == 0 && yerr[0] == 0 && yerr[1] == 0 && yerr[2] == 0) {cout << "ERRORE: Incertezze non specificate" << endl;}
+    else {
+    TGraphErrors *graph1 = new TGraphErrors(3,x,y,xerr,yerr);
+    TF1* fitfunc1 = new TF1("fittingfunction","[0]+[1]*x",-10,10);
+    xyfitfunc = fitfunc1;
+    xygraph = graph1;
+    xyfitfunc->SetParameters(0,0);
+    xygraph->Fit(xyfitfunc,"0SR");
+    }
+  };
+  
+  void XYDraw(){
+    xygraph->SetLineColor(kBlue);
+     xyfitfunc->SetLineColor(kRed);
+  TCanvas* XYlinearfit = new TCanvas();
+  XYlinearfit->SetTitle("XY Linear Fit");
+  XYlinearfit->SetGrid();
+  xygraph->GetXaxis()->SetTitle("x [cm]");
+  xygraph->GetYaxis()->SetTitle("y [cm]");
+  xygraph->GetXaxis()->CenterTitle();
+  xygraph->GetYaxis()->CenterTitle();
+  xygraph->DrawClone("APE");
+  xyfitfunc->DrawClone("SAME");
+  }
+
+ void XZFit(){   
+    if (xerr[0] == 0 && xerr[1] == 0 && xerr[2] == 0 && zerr[0] == 0 && zerr[1] == 0 && zerr[2] == 0) {cout << "ERRORE: Incertezze non specificate" << endl;}
+    else {
+    TGraphErrors *graph1 = new TGraphErrors(3,x,z,xerr,zerr);
+    TF1* fitfunc1 = new TF1("fittingfunction","[0]+[1]*x",-10,10);
+    xzfitfunc = fitfunc1;
+    xzgraph = graph1;
+    xzfitfunc->SetParameters(0,0);
+    xzgraph->Fit(xzfitfunc,"0SR");
+    }
+  };
+  
+  void XZDraw(){
+    xzgraph->SetLineColor(kBlue);
+     xzfitfunc->SetLineColor(kRed);
+  TCanvas* XZlinearfit = new TCanvas();
+  XZlinearfit->SetTitle("XZ Linear Fit");
+  XZlinearfit->SetGrid();
+  xzgraph->GetXaxis()->SetTitle("x [cm]");
+  xzgraph->GetYaxis()->SetTitle("z [cm]");
+  xzgraph->GetXaxis()->CenterTitle();
+  xzgraph->GetYaxis()->CenterTitle();
+  xzgraph->DrawClone("APE");
+  xzfitfunc->DrawClone("SAME");
+  }
+
+void YZFit(){   
+    if (yerr[0] == 0 && yerr[1] == 0 && yerr[2] == 0 && zerr[0] == 0 && zerr[1] == 0 && zerr[2] == 0) {cout << "ERRORE: Incertezze non specificate" << endl;}
+    else {
+    TGraphErrors *graph1 = new TGraphErrors(3,y,z,yerr,zerr);
+    TF1* fitfunc1 = new TF1("fittingfunction","[0]+[1]*x",-10,10);
+    yzfitfunc = fitfunc1;
+    yzgraph = graph1;
+    yzfitfunc->SetParameters(0,0);
+    yzgraph->Fit(yzfitfunc,"0SR");
+    }
+  };
+  
+  void YZDraw(){
+    yzgraph->SetLineColor(kBlue);
+     yzfitfunc->SetLineColor(kRed);
+  TCanvas* YZlinearfit = new TCanvas();
+  YZlinearfit->SetTitle("YZ Linear Fit");
+  YZlinearfit->SetGrid();
+  yzgraph->GetXaxis()->SetTitle("y [cm]");
+  yzgraph->GetYaxis()->SetTitle("z [cm]");
+  yzgraph->GetXaxis()->CenterTitle();
+  yzgraph->GetYaxis()->CenterTitle();
+  yzgraph->DrawClone("APE");
+  yzfitfunc->DrawClone("SAME");
+  }
+
+};
+    
+
+void fit2(){
+  double p1[3] = {1.05,3.95,5.98};
+  double p2[3] = {2.01,4.97,7.02};
+  double p3[3] = {2.99,5.95,7.99};
+  triplet n1(p1,p2,p3);
+  n1.XZFit();
+  n1.XZDraw();
+  }
+  
+

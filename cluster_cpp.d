@@ -1,0 +1,75 @@
+
+# DO NOT DELETE
+
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TF1.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TFormula.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TNamed.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TObject.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Rtypes.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/RConfig.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/RVersion.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/DllImport.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Rtypeinfo.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/snprintf.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/strlcpy.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TGenericClassInfo.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TSchemaHelper.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TStorage.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVersionCheck.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Riosfwd.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TBuffer.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TString.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TMathBase.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TBits.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TObjArray.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TSeqCollection.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TCollection.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TIterator.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttLine.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttFill.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttMarker.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Math/ParamFunctor.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TGraphErrors.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TGraph.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVectorFfwd.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVectorDfwd.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TFitResultPtr.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TH1F.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TH1.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAxis.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttAxis.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArrayD.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArray.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArrayC.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArrayS.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArrayI.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TArrayF.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Foption.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TH2F.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TH2.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TMatrixFBasefwd.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TMatrixDBasefwd.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TGraph2D.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVirtualHistPainter.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TFile.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TDirectoryFile.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TDirectory.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TList.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TDatime.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TUUID.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TMap.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/THashTable.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TUrl.h fit.cpp
+./cluster_cpp.so: hit.cpp /home/federico/Scaricati/root/include/TCanvas.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TPad.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVirtualPad.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttPad.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TVirtualX.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttText.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/GuiTypes.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/Buttons.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TQObject.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TAttCanvas.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/TCanvasImp.h
+./cluster_cpp.so: /home/federico/Scaricati/root/include/cintdictversion.h /home/federico/Scaricati/root/include/RVersion.h
+cluster_cpp__ROOTBUILDVERSION= 5.34/11

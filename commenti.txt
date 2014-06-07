@@ -1,0 +1,7 @@
+Calcolo dell'efficienza
+
+DUE IPOTESI:
+
+Niente rumore: per camera centrale semplicemente numero di conteggi ad almeno un hit per camera diviso eventi totali. Per camere esterne: ricostruire la traccia dei triggerati e vedere se geometricamente va a finire sull'altro.
+
+Con rumore: Stimare probabilità che arrivino due segnali di rumore "contemporaneamente" oppure un segnale di rumore + segnale vero? Se trascurabile si ritorna al caso uno.
