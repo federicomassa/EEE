@@ -98,7 +98,7 @@ xyfitfunc = new TF1("xyfittingfunction", "[0]+[1]*x",-100,100);
         xygraph = new TGraphErrors(3,xv,yv,xerr,yerr);
     xyfitfunc->SetParameters(80,0.7);
 
-    xygraph->Fit(xyfitfunc,"0S");
+    xygraph->Fit(xyfitfunc,"0QS");
     }
   };
   
@@ -128,7 +128,7 @@ xyfitfunc = new TF1("xyfittingfunction", "[0]+[1]*x",-100,100);
 xzfitfunc = new TF1("xzfittingfunction", "[0]+[1]*x",-100,100);
         xzgraph = new TGraphErrors(3,xv,yv,xerr,zerr);
     xzfitfunc->SetParameters(30,-2);
-    xzgraph->Fit(xzfitfunc,"0S");
+    xzgraph->Fit(xzfitfunc,"0QS");
     }
   };
   
@@ -154,7 +154,7 @@ void YZFit(){
     yzgraph = new TGraphErrors(3,yv,zv,yerr,zerr);
     yzfitfunc = new TF1("yzfittingfunction","[0]+[1]*x",-1000,1000);
     yzfitfunc->SetParameters(300,-6);
-    yzgraph->Fit(yzfitfunc,"0S");
+    yzgraph->Fit(yzfitfunc,"0QS");
     }
   };
   

@@ -28,7 +28,7 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 void tracks(){  
   double parameter = 0;
   // ifstream run("EEE_Prova_topbottom8900__20140530_174533.txt"); //INPUT FILE
-   ifstream run("EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE
+   ifstream run("../Data/EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE
   //  int point::n = 0;
   TFile rfile("Disttopbot.root","RECREATE");
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
@@ -73,7 +73,7 @@ void tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-          for (int k = 0; k <= 3000; k++){
+          for (int k = 0; k <= 100; k++){
 
   // do  {// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
@@ -121,14 +121,14 @@ void tracks(){
   double* z = new double[linecount];
   
 
-  for (int q = 0; q < linecount; q++){
-    x[q] = hit[q].x;
-    y[q] = hit[q].y;
-    z[q] = hit[q].z;}
-  TGraph2D* evdisplay = new TGraph2D(linecount,x,y,z);
-  evdisplay->SetTitle("Event Display;X;Y;Z");
+   for (int q = 0; q < linecount; q++){
+     x[q] = hit[q].x;
+     y[q] = hit[q].y;
+     z[q] = hit[q].z;}
+   TGraph2D* evdisplay = new TGraph2D(linecount,x,y,z);
+    evdisplay->SetTitle("Event Display;X;Y;Z");
   
-    if (k == 2829) evdisplay->Write();
+    k==2829 ? /*evdisplay->Write();*/ cout << "Ciao" << endl:;
 
 
 
@@ -164,7 +164,7 @@ void tracks(){
     delete[] x;
     delete[] y;
     delete[] z;
-    delete evdisplay;
+     delete evdisplay;
     getline(run,line);
     entry = ""; 
 
@@ -224,7 +224,7 @@ void tracks(){
     delete[] x;
     delete[] y;
     delete[] z;
-    delete evdisplay;
+     delete evdisplay;
   delete[] hit;
   // cout << point::n << endl;
   getline(run,line);
