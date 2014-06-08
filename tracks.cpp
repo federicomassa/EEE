@@ -58,7 +58,7 @@ void tracks(){
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
   triplet n1;
-  double chi = 1000, tempchi = 0,xytempchi = 0, xztempchi = 0, yztempchi = 0, theta = 1000, temptheta = 0, phi = 1000, tempphi = 0;
+  double chi = 1000, tempchi = 0,xytempchi = 0, xztempchi = 0, yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
   double number = 0;
   string line;
@@ -74,7 +74,7 @@ void tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-          for (int k = 0; k <= 5000; k++){
+          for (int k = 0; k <= 150; k++){
 
   // do  {// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
@@ -130,7 +130,7 @@ void tracks(){
     evdisplay->SetTitle("Event Display;X;Y;Z");
 
     // qui inserire event display
-
+    if (k == 142) evdisplay->Write(); 
 
   //Plot distanze tra due hit, per le camere 2 e 3 aggiunto un offset di ch1 o (ch1+ch2) perché gli 
   // hit sono in ordine di camera nel file
@@ -188,11 +188,9 @@ void tracks(){
    		  //  cout << "DOPO FIT" << endl;
 		  tempchi = (n1.XYGetChisquare()+n1.YZGetChisquare()+n1.XZGetChisquare())/3;
    		  //		  cout << "DOPO CHI" << endl;
-   		  temptheta = n1.GetTheta();
-   		  tempphi = n1.GetPhi();
-   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare(); xztempchi = n1.XZGetChisquare(); yztempchi = n1.YZGetChisquare(); theta = temptheta; phi = tempphi; parameter = n1.YZGetParameter(1);besty = n1.yv;}
+   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare(); xztempchi = n1.XZGetChisquare(); yztempchi = n1.YZGetChisquare(); theta = n1.GetTheta(); phi = n1.GetPhi();parameter = n1.YZGetParameter(1);besty = n1.yv;}
        }}}
-   if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl;}
+   // if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "k: " << k << endl;}
    disxy1->Fill(n1.GetCoordinate(0,0),n1.GetCoordinate(1,0));
    disxy2->Fill(n1.GetCoordinate(0,1),n1.GetCoordinate(1,1));
    disxy3->Fill(n1.GetCoordinate(0,2),n1.GetCoordinate(1,2));
@@ -213,7 +211,7 @@ void tracks(){
      // cout << "Theta: " << n1.GetTheta() << endl;
      // cout << "Phi: " << n1.GetPhi() << endl;
 	//   if (theta <= 0.025){cout << "TROVATO THETA = 0 in evento" << k << " con theta: " << theta << " e phi: " << phi << " xyparamter: " << n1.XYGetParameter(1) << " yzparameter: " << n1.YZGetParameter(1) << endl; cin.get();}   
-	
+	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "k da contr: " << k << endl; cin.get();}
          distheta->Fill(theta);
          disphi->Fill(phi);
        }

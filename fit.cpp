@@ -213,25 +213,26 @@ void YZFit(){
     
 
 void fit(){
-  point* p1 = new point; p1->SetValues(-35,-63.36,145); 
-  point* p2 = new point; p2->SetValues(-40,-65.85,85);
-  point* p3 = new point; p3->SetValues(-45,-36,23);
+  point* p1 = new point; p1->SetValues(5,-1.44,145); 
+  point* p2 = new point; p2->SetValues(-5,-5.37,85);
+  point* p3 = new point; p3->SetValues(-20,0,23);
 
   triplet n1; n1.SetPoints(*p1,*p2,*p3);
   n1.Fit();
-  cout << n1.YZGetChisquare() << endl;
-  cout << n1.GetTheta() << endl;
-  // TGraphErrors* g1 = new TGraphErrors(3,n1.xv,n1.zv,n1.xerr,n1.zerr);
-  // cout << "intercetta: " << n1.XZGetIntercept();
-  // cout << "pendenza: " << n1.XZGetSlope();
-  // TF1* f1 = new TF1("lin","[0]+[1]*x",-100,100);
-  // f1->SetParameters(n1.XZGetIntercept(),n1.XZGetSlope());
-  // g1->Fit(f1);
-  // cout << "THETA: " << n1.GetTheta() << endl;
-  // cout << "PHI: " << n1.GetPhi() << endl;
-  // cout << "XZ: " << n1.XZGetChisquare() << endl;
-  // cout << "YZ: " << n1.YZGetChisquare() << endl;
-  // cout << "XY: " << n1.XYGetChisquare() << endl;
+
+  TGraphErrors* g1 = new TGraphErrors(3,n1.yv,n1.zv,n1.yerr,n1.zerr);
+  cout << "intercetta: " << n1.YZGetIntercept();
+  cout << "pendenza: " << n1.YZGetSlope();
+  TF1* f1 = new TF1("lin","[0]+[1]*x",-100,100);
+  f1->SetParameters(n1.YZGetIntercept(),n1.YZGetSlope());
+  g1->Fit(f1,"0");
+  g1->Draw("APE");
+  f1->DrawCopy("same");
+  cout << "THETA: " << n1.GetTheta() << endl;
+  cout << "PHI: " << n1.GetPhi() << endl;
+  cout << "XZ: " << n1.XZGetChisquare() << endl;
+  cout << "YZ: " << n1.YZGetChisquare() << endl;
+  cout << "XY: " << n1.XYGetChisquare() << endl;
 
 			 
 
