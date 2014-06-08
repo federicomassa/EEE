@@ -18,12 +18,14 @@ public:
   //calcolo "manuale" del chi2 per i fit che danno particolari problemi (picco in theta = 0..)
   double XYGetChisquare_m() {
     XYFit();
+    
     double eqerr[3];
     double result = 0;
     // somma in quadratura: attenzione: viene usata la pendenza tra due punti per il calcolo di eqerr
     for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(yerr[n]) + sqr(XYGetSlope()*xerr[n]));
     for (unsigned n = 0; n < 3; n++) result += sqr((yv[n]- (XYGetParameter(0) + XYGetParameter(1)*xv[n]))/eqerr[n]);
-    return result;
+    return result; 
+
   }
 
   double XZGetChisquare_m() {
@@ -75,6 +77,7 @@ public:
   TF1 *yzfitfunc;
   TGraphErrors *yzgraph;
   double theta,phi;
+  bool vert;
   //public:
   triplet(){
     xyfitfunc = 0;
@@ -99,25 +102,33 @@ public:
   double YZGetChisquare(){return (yzfitfunc->GetChisquare());};
   double YZGetParameter(int i){return (yzfitfunc->GetParameter(i));};
   double GetPhi(){
+    if (!vert){
     phi = atan(xyfitfunc->GetParameter(1));
     if (yzfitfunc->GetParameter(1) > 0 && phi < 0) phi = phi + 4*atan(1.);
     if (yzfitfunc->GetParameter(1) < 0 && phi > 0) phi = phi + 4*atan(1.);
     if (yzfitfunc->GetParameter(1) < 0 && phi < 0) phi = phi + 8*atan(1.);
 //Uso l'altra sezione per risolvere l'indecisione di 180° su phi
-    return phi; };
+    return phi;}
+    else {
+      if (YZGetParameter(1) > 0) return 2*atan(1);
+      else {return 6*atan(1);} 
+    
+    }
+  }
+  
  
   
   double GetTheta(){
     phi = GetPhi();
-    //   if((xzfitfunc->GetParameter(1)*fabs(cos(phi))) != 0)
     theta = absval(atan(1/(yzfitfunc->GetParameter(1)*(sin(phi)))));
-      return theta;};
+    return theta;};
 
 void SetPoints(point x1, point x2, point x3){
-  //  point::n = point::n +3;
     xv[0] = x1.x; xv[1] = x2.x; xv[2] = x3.x;
     yv[0] = x1.y ; yv[1] = x2.y; yv[2] = x3.y;
     zv[0] = x1.z; zv[1] = x2.z; zv[2] = x3.z;
+    //controllo di verticalità
+    if (xv[0] == xv[1] && xv[0] == xv[2]) vert = true; else vert = false;
     for (int i = 0; i < 3;i++) {xerr[i] = 1.44; yerr[i] = 2;zerr[i] = 0.5;}};  //incertezze di default
   
    triplet(point x1, point x2, point x3){
@@ -146,11 +157,13 @@ void SetPoints(point x1, point x2, point x3){
     // xygraph = graph1;
       delete xyfitfunc;  //Dealloca prima di riallocarne uno nuovo
       delete xygraph;
+
 xyfitfunc = new TF1("xyfittingfunction", "[0]+[1]*x",-100,100);
-        xygraph = new TGraphErrors(3,xv,yv,xerr,yerr);
+        xygraph = new TGraphErrors(3,xv,yv,xerr,yerr); 
 	xyfitfunc->SetParameters(XYGetIntercept(), XYGetSlope());
 	xygraph->Fit(xyfitfunc,"0QS");
-    }
+    } 
+
   };
   
   // void XYDraw(){
@@ -254,11 +267,12 @@ void fit(){
   // point* p2 = new point; p2->SetValues(-5,-5.37,85);
   // point* p3 = new point; p3->SetValues(-20,0,23);
 
-  point* p1 = new point; p1->SetValues(1.1,1.95,3.05); 
-  point* p2 = new point; p2->SetValues(6.9,8.05,8.95);
-  point* p3 = new point; p3->SetValues(20.1,21,22.2);
+  point* p1 = new point; p1->SetValues(-30.00,138.24,145.00); 
+  point* p2 = new point; p2->SetValues(-30.00,92.55,85.00);
+  point* p3 = new point; p3->SetValues(-30,66.24,23.00);
   triplet n1; n1.SetPoints(*p1,*p2,*p3);
-  n1.Fit();
+  n1.XYFit();
+  n1.YZFit();
   
   // TGraphErrors* g1 = new TGraphErrors(3,n1.yv,n1.zv,n1.yerr,n1.zerr);
   // cout << "intercetta: " << n1.YZGetIntercept();
@@ -268,20 +282,21 @@ void fit(){
   // g1->Fit(f1,"0");
   // g1->Draw("APE");
   // f1->DrawCopy("same");
-  cout << "XY 0: " << n1.XYGetParameter(0) << endl;
-  cout << "XY 1: " << n1.XYGetParameter(1) << endl;
-  cout << "THETA: " << n1.GetTheta() << endl;
-  cout << "PHI: " << n1.GetPhi() << endl;
-  cout << "XZ: " << n1.XZGetChisquare() << endl;
-  cout << "YZ: " << n1.YZGetChisquare() << endl;
-  cout << "XY: " << n1.XYGetChisquare() << endl;
+  // cout << "XY 0: " << n1.XYGetParameter(0) << endl;
+  // cout << "XY 1: " << n1.XYGetParameter(1) << endl;
+  // cout << "THETA: " << n1.GetTheta() << endl;
+  // cout << "PHI: " << n1.GetPhi() << endl;
+  // cout << "XZ: " << n1.XZGetChisquare() << endl;
+  // cout << "YZ: " << n1.YZGetChisquare() << endl;
+  // cout << "XY: " << n1.XYGetChisquare() << endl;
 
   cout << '\n' << "MANUALE" << '\n' << endl;
 
+  cout << "yz: " << n1.YZGetChisquare() << endl;
+  // cout << "xz: " << n1.XZGetChisquare_m() << endl;
   cout << "xy: " << n1.XYGetChisquare_m() << endl;
-  cout << "xz: " << n1.XZGetChisquare_m() << endl;
-  cout << "yz: " << n1.YZGetChisquare_m() << endl;
-
+  cout << "theta: " << n1.GetTheta() << endl;
+  cout << "phi: " << n1.GetPhi() << endl;
   // double chi = n1.XYGetChisquare();
   // cout << "chi square: " << chi << endl;
   //  cout << "Theta: " << n1.GetTheta() << endl;
