@@ -7,10 +7,24 @@ using namespace std;
 
 double absval(double d) {
   if (d >= 0) return (d);
-  if (d < 0) return (-d);}
+  else return (-d);}
 
 class triplet{
 public:
+ double XYGetIntercept() {
+    return (yv[0]-(yv[1]-yv[0])/(xv[1]-xv[0])*xv[0]) ;}
+ double XZGetIntercept() {
+     return (zv[0]-(zv[1]-zv[0])/(xv[1]-xv[0])*xv[0]) ;}
+ double YZGetIntercept() {
+   return (zv[0]-(zv[1]-zv[0])/(yv[1]-yv[0])*yv[0]) ;}
+
+ double XYGetSlope() {
+    return (yv[1]-yv[0])/(xv[1]-xv[0]) ;}
+ double XZGetSlope() {
+    return (zv[1]-zv[0])/(xv[1]-xv[0]) ;}
+ double YZGetSlope() {
+    return (zv[1]-zv[0])/(yv[1]-yv[0]) ;}
+
   double xv[3];
   double yv[3];
   double zv[3];
@@ -54,6 +68,7 @@ public:
     if (yzfitfunc->GetParameter(1) < 0 && phi < 0) phi = phi + 8*atan(1.);
 //Uso l'altra sezione per risolvere l'indecisione di 180° su phi
     return phi; };
+ 
   
   double GetTheta(){
     phi = GetPhi();
@@ -96,9 +111,8 @@ void SetPoints(point x1, point x2, point x3){
       delete xygraph;
 xyfitfunc = new TF1("xyfittingfunction", "[0]+[1]*x",-100,100);
         xygraph = new TGraphErrors(3,xv,yv,xerr,yerr);
-    xyfitfunc->SetParameters(80,0.7);
-
-    xygraph->Fit(xyfitfunc,"0QS");
+	xyfitfunc->SetParameters(XYGetIntercept(), XYGetSlope());
+	xygraph->Fit(xyfitfunc,"0QS");
     }
   };
   
@@ -126,9 +140,9 @@ xyfitfunc = new TF1("xyfittingfunction", "[0]+[1]*x",-100,100);
       delete xzfitfunc;  //Dealloca prima di riallocarne uno nuovo
       delete xzgraph;
 xzfitfunc = new TF1("xzfittingfunction", "[0]+[1]*x",-100,100);
-        xzgraph = new TGraphErrors(3,xv,yv,xerr,zerr);
-    xzfitfunc->SetParameters(30,-2);
-    xzgraph->Fit(xzfitfunc,"0QS");
+        xzgraph = new TGraphErrors(3,xv,zv,xerr,zerr);
+  	xzfitfunc->SetParameters(XZGetIntercept(), XZGetSlope());
+	xzgraph->Fit(xzfitfunc,"0QS");
     }
   };
   
@@ -153,7 +167,7 @@ void YZFit(){
       delete yzgraph;
     yzgraph = new TGraphErrors(3,yv,zv,yerr,zerr);
     yzfitfunc = new TF1("yzfittingfunction","[0]+[1]*x",-1000,1000);
-    yzfitfunc->SetParameters(300,-6);
+    yzfitfunc->SetParameters(YZGetIntercept(), YZGetSlope());
     yzgraph->Fit(yzfitfunc,"0QS");
     }
   };
@@ -199,29 +213,27 @@ void YZFit(){
     
 
 void fit(){
-  point* p1 = new point; p1->SetValues(-50,47.52,145); 
-  point* p2 = new point; p2->SetValues(-20,70.95,85);
-  point* p3 = new point; p3->SetValues(10,84.96,23);
+  point* p1 = new point; p1->SetValues(-35,-63.36,145); 
+  point* p2 = new point; p2->SetValues(-40,-65.85,85);
+  point* p3 = new point; p3->SetValues(-45,-36,23);
 
   triplet n1; n1.SetPoints(*p1,*p2,*p3);
   n1.Fit();
-  TF1* f1 = new TF1("XZ;X;Z","[0]*x+[1]",-60,60);  
-  TF1* f2 = new TF1("YZ;Y;Z","[0]*x+[1]",40,100);
-  TF1* f3 = new TF1("XY;X;Y","[0]*x+[1]",-60,60);
-  f1->SetParameters(n1.XZGetParameter(0),n1.XZGetParameter(1));
-  f2->SetParameters(n1.YZGetParameter(0),n1.YZGetParameter(1));
-  f3->SetParameters(n1.XYGetParameter(0),n1.XYGetParameter(1));
-  TCanvas *c1 = new TCanvas("c1");
-  f1->DrawCopy();
-  TCanvas *c2 = new TCanvas("c2");
-  f2->DrawCopy();
-  TCanvas *c3 = new TCanvas("c3");
-  f3->DrawCopy();
-  cout << "THETA: " << n1.GetTheta() << endl;
-  cout << "PHI: " << n1.GetPhi() << endl;
-  cout << "XZ: " << n1.XZGetChisquare() << endl;
-  cout << "YZ: " << n1.YZGetChisquare() << endl;
-  cout << "XY: " << n1.XYGetChisquare() << endl;
+  cout << n1.YZGetChisquare() << endl;
+  cout << n1.GetTheta() << endl;
+  // TGraphErrors* g1 = new TGraphErrors(3,n1.xv,n1.zv,n1.xerr,n1.zerr);
+  // cout << "intercetta: " << n1.XZGetIntercept();
+  // cout << "pendenza: " << n1.XZGetSlope();
+  // TF1* f1 = new TF1("lin","[0]+[1]*x",-100,100);
+  // f1->SetParameters(n1.XZGetIntercept(),n1.XZGetSlope());
+  // g1->Fit(f1);
+  // cout << "THETA: " << n1.GetTheta() << endl;
+  // cout << "PHI: " << n1.GetPhi() << endl;
+  // cout << "XZ: " << n1.XZGetChisquare() << endl;
+  // cout << "YZ: " << n1.YZGetChisquare() << endl;
+  // cout << "XY: " << n1.XYGetChisquare() << endl;
+
+			 
 
   // double chi = n1.XYGetChisquare();
   // cout << "chi square: " << chi << endl;
