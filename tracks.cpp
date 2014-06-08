@@ -122,15 +122,15 @@ void tracks(){
   double* z = new double[linecount];
   
 
-   for (int q = 0; q < linecount; q++){
-     x[q] = hit[q].x;
-     y[q] = hit[q].y;
-     z[q] = hit[q].z;}
+   // for (int q = 0; q < linecount; q++){
+   //   x[q] = hit[q].x;
+   //   y[q] = hit[q].y;
+   //   z[q] = hit[q].z;}
    TGraph2D* evdisplay = new TGraph2D(linecount,x,y,z);
-    evdisplay->SetTitle("Event Display;X;Y;Z");
+    // evdisplay->SetTitle("Event Display;X;Y;Z");
 
     // qui inserire event display
-    if (k == 142) evdisplay->Write(); 
+      // if (k == 142) evdisplay->Write(); 
 
   //Plot distanze tra due hit, per le camere 2 e 3 aggiunto un offset di ch1 o (ch1+ch2) perché gli 
   // hit sono in ordine di camera nel file
@@ -211,7 +211,7 @@ void tracks(){
      // cout << "Theta: " << n1.GetTheta() << endl;
      // cout << "Phi: " << n1.GetPhi() << endl;
 	//   if (theta <= 0.025){cout << "TROVATO THETA = 0 in evento" << k << " con theta: " << theta << " e phi: " << phi << " xyparamter: " << n1.XYGetParameter(1) << " yzparameter: " << n1.YZGetParameter(1) << endl; cin.get();}   
-	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "k da contr: " << k << endl; cin.get();}
+	//	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "k da contr: " << k << endl; cin.get();}
          distheta->Fill(theta);
          disphi->Fill(phi);
        }
