@@ -74,7 +74,7 @@ void tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-          for (int k = 0; k <= 150; k++){
+          for (int k = 0; k <= 3000; k++){
 
   // do  {// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
@@ -186,9 +186,9 @@ void tracks(){
    		  n1.YZFit();
 		  n1.XZFit();
    		  //  cout << "DOPO FIT" << endl;
-		  tempchi = (n1.XYGetChisquare()+n1.YZGetChisquare()+n1.XZGetChisquare())/3;
+		  tempchi = (n1.XYGetChisquare_m()+n1.YZGetChisquare_m()+n1.XZGetChisquare_m())/3;
    		  //		  cout << "DOPO CHI" << endl;
-   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare(); xztempchi = n1.XZGetChisquare(); yztempchi = n1.YZGetChisquare(); theta = n1.GetTheta(); phi = n1.GetPhi();parameter = n1.YZGetParameter(1);besty = n1.yv;}
+   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); xztempchi = n1.XZGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); theta = n1.GetTheta(); phi = n1.GetPhi();parameter = n1.YZGetParameter(1);besty = n1.yv;}
        }}}
    // if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "k: " << k << endl;}
    disxy1->Fill(n1.GetCoordinate(0,0),n1.GetCoordinate(1,0));
