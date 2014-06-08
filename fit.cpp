@@ -20,9 +20,9 @@ public:
     XYFit();
     double eqerr[3];
     double result = 0;
-    // somma in quadratura
-    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(yerr[n]) + sqr(XYGetParameter(1)*xerr[n]));
-    for (unsigned n = 0; n < 3; n++) result += sqr(yv[n]- (XYGetParameter(0) + XYGetParameter(1)*xv[0])/eqerr[n]);
+    // somma in quadratura: attenzione: viene usata la pendenza tra due punti per il calcolo di eqerr
+    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(yerr[n]) + sqr(XYGetSlope()*xerr[n]));
+    for (unsigned n = 0; n < 3; n++) result += sqr((yv[n]- (XYGetParameter(0) + XYGetParameter(1)*xv[n]))/eqerr[n]);
     return result;
   }
 
@@ -30,9 +30,9 @@ public:
     XZFit();
     double eqerr[3];
     double result = 0;
-    // somma in quadratura
-    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(zerr[n]) + sqr(XZGetParameter(1)*xerr[n]));
-    for (unsigned n = 0; n < 3; n++) result += sqr(zv[n]- (XYGetParameter(0) + XYGetParameter(1)*xv[0])/eqerr[n]);
+    // somma in quadratura: attenzione: viene usato XYGetParameter(1) per il calcolo di eqerr, possibile pericolo
+    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(zerr[n]) + sqr(XZGetSlope()*xerr[n]));
+    for (unsigned n = 0; n < 3; n++) result += sqr((zv[n]- (XZGetParameter(0) + XZGetParameter(1)*xv[n]))/eqerr[n]);
     return result;
   }
 
@@ -41,8 +41,8 @@ public:
     double eqerr[3];
     double result = 0;
     // somma in quadratura
-    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(zerr[n]) + sqr(YZGetParameter(1)*yerr[n]));
-    for (unsigned n = 0; n < 3; n++) result += sqr(zv[n]- (YZGetParameter(0) + YZGetParameter(1)*yv[0])/eqerr[n]);
+    for (unsigned n = 0; n < 3; n++) eqerr[n] = sqrt(sqr(zerr[n]) + sqr(YZGetSlope()*yerr[n]));
+    for (unsigned n = 0; n < 3; n++) result += sqr((zv[n]- (YZGetParameter(0) + YZGetParameter(1)*yv[n]))/eqerr[n]);
     return result;
   }
 
@@ -124,7 +124,7 @@ void SetPoints(point x1, point x2, point x3){
      xv[0] = x1.x; xv[1] = x2.x; xv[2] = x3.x;
      yv[0] = x1.y ; yv[1] = x2.y; yv[2] = x3.y;
      zv[0] = x1.z; zv[1] = x2.z; zv[2] = x3.z;
-     for (int i = 0; i < 3;i++) {xerr[i] = 1.44; yerr[i] = 0.1;zerr[i] = 0.5;}};  //incertezze di default
+     for (int i = 0; i < 3;i++) {xerr[i] = 1.44; yerr[i] = 2;zerr[i] = 0.5;}};  //incertezze di default
 
      ~triplet() {
     delete xyfitfunc;
@@ -259,7 +259,7 @@ void fit(){
   point* p3 = new point; p3->SetValues(20.1,21,22.2);
   triplet n1; n1.SetPoints(*p1,*p2,*p3);
   n1.Fit();
-
+  
   // TGraphErrors* g1 = new TGraphErrors(3,n1.yv,n1.zv,n1.yerr,n1.zerr);
   // cout << "intercetta: " << n1.YZGetIntercept();
   // cout << "pendenza: " << n1.YZGetSlope();
@@ -268,6 +268,8 @@ void fit(){
   // g1->Fit(f1,"0");
   // g1->Draw("APE");
   // f1->DrawCopy("same");
+  cout << "XY 0: " << n1.XYGetParameter(0) << endl;
+  cout << "XY 1: " << n1.XYGetParameter(1) << endl;
   cout << "THETA: " << n1.GetTheta() << endl;
   cout << "PHI: " << n1.GetPhi() << endl;
   cout << "XZ: " << n1.XZGetChisquare() << endl;
@@ -275,6 +277,7 @@ void fit(){
   cout << "XY: " << n1.XYGetChisquare() << endl;
 
   cout << '\n' << "MANUALE" << '\n' << endl;
+
   cout << "xy: " << n1.XYGetChisquare_m() << endl;
   cout << "xz: " << n1.XZGetChisquare_m() << endl;
   cout << "yz: " << n1.YZGetChisquare_m() << endl;
