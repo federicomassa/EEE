@@ -25,13 +25,13 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 
-void top_bot_tracks(){
+void top_mid_tracks(){
   int evnum = 0;
   int eff3 = 0, eff2 = 0;
   bool bestvert;
   double *besty = new double[3];
   double parameter = 0;
-   ifstream run("../Data/EEE_Prova_topbottom8900__20140530_174533.txt"); //INPUT FILE  
+   ifstream run("../Data/EEE_Prova_topmid9000__20140530_181026.txt"); //INPUT FILE  
   TFile rfile("Disttopbot.root","RECREATE");
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
@@ -157,8 +157,8 @@ void top_bot_tracks(){
     }}
 	  
   //   cout << "DOPO FOR" << endl;
- //Controllo la bontà dell'evento: ha almeno un hit per camera (top_bottom)?
-  if (ch1 < 1 || ch3 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
+ //Controllo la bontà dell'evento: ha almeno un hit per camera (top_mid)?
+  if (ch1 < 1 || ch2 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
     j = 0; 
     delete [] hit;
     // cout << point::n << endl;
@@ -171,13 +171,11 @@ void top_bot_tracks(){
 
     continue;} //Evento non buono: prossimo evento
 
-  else { //evento con almeno un hit per camera (top_bottom)
+  else if (ch3 > 0) { //evento con almeno un hit per camera (top_mid)
        //    for (int kk = 0; kk < 3; kk++) {
     //	cout << hit[kk].x << endl;
     //	cout << hit[kk].y << endl;
     //	cout << hit[kk].z << endl;}
-    eff2 += 1;
-    if (ch2 >= 1) eff3 += 1;
    for (int a = 0; a < (ch1); a++) {
      for (int b = 0; b < (ch2); b++) {
        for (int c = 0; c < (ch3); c++) {
@@ -188,7 +186,7 @@ void top_bot_tracks(){
    		  //  cout << "DOPO FIT" << endl;
 		  if (!n1.vert)
 		  tempchi = (n1.XYGetChisquare_m()/*+n1.XZGetChisquare_m()*/ +n1.YZGetChisquare_m())/2; //tolto xz per sicurezza: potrebbe essere verticale
-		  else tempchi = n1.YZGetChisquare()/2;
+		  else tempchi = n1.YZGetChisquare_m()/2;
    		  //		  cout << "DOPO CHI" << endl;
    		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);*/besty = n1.yv;bestvert = n1.vert;}
        }}}
@@ -218,11 +216,11 @@ void top_bot_tracks(){
 	if (theta > 1.22) {cout << "HUGE THETA at evnum: " << evnum << endl;}
 	distheta->Fill(theta*180/3.14159);
 	disphi->Fill(phi*180/3.14159);
-       }
+      }
    //  else {
    //  jj += 1;
    //  if (jj == 1) {chi2 << chi << endl; n1.XYDraw(); n1.YZDraw();}
-   }
+  
   j = 0;
     delete[] x;
     delete[] y;
@@ -241,9 +239,11 @@ void top_bot_tracks(){
    disz->SetBinContent(4,disz->GetBinContent(4)+ch1);
    disz->SetBinContent(8,disz->GetBinContent(8)+ch2);
    disz->SetBinContent(12,disz->GetBinContent(12)+ch3);
+  
+  }
+  else { //vedere se la traccia finisce sulla terza camera o no
    
-   // cout << "FINE DEL DO" << endl;
-	  }
+  } }// cout << "FINE DEL DO" << endl;
 
 
 

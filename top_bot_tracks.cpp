@@ -177,7 +177,20 @@ void top_bot_tracks(){
     //	cout << hit[kk].y << endl;
     //	cout << hit[kk].z << endl;}
     eff2 += 1;
-    if (ch2 >= 1) eff3 += 1;
+    if (ch2 < 1) { j = 0; 
+    delete [] hit;
+    // cout << point::n << endl;
+    delete[] x;
+    delete[] y;
+    delete[] z;
+     delete evdisplay;
+    getline(run,line);
+    entry = ""; 
+
+    continue;}
+    else {
+
+      eff3 += 1;
    for (int a = 0; a < (ch1); a++) {
      for (int b = 0; b < (ch2); b++) {
        for (int c = 0; c < (ch3); c++) {
@@ -243,7 +256,7 @@ void top_bot_tracks(){
    disz->SetBinContent(12,disz->GetBinContent(12)+ch3);
    
    // cout << "FINE DEL DO" << endl;
-	  }
+  }	  }
 
 
 

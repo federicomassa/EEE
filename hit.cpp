@@ -37,3 +37,20 @@ public:
 
   };
 };
+
+double GetIntercept(point a, point b) { //se verticale restituisce -5000
+  if (a.x != b.x)
+    return (a.y - (b.y-a.y)/(b.x-a.x)*a.x);
+  else
+    return (-5000);
+      }
+
+double GetSlope(point a, point b) { //se verticale restituisce -5000
+  if (a.x != b.x)
+    return (b.y-a.y)/(b.x-a.x);
+  else
+    return (-5000);
+      }
+
+
+  
