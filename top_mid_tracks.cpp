@@ -170,8 +170,11 @@ void top_mid_tracks(){
     entry = ""; 
 
     continue;} //Evento non buono: prossimo evento
-
-  else if (ch3 > 0) { //evento con almeno un hit per camera (top_mid)
+  
+  else {//evento con almeno un hit per camera (top_mid)
+    eff2 += 1;
+    if(ch3 > 0) { 
+    eff3 += 1;
        //    for (int kk = 0; kk < 3; kk++) {
     //	cout << hit[kk].x << endl;
     //	cout << hit[kk].y << endl;
@@ -213,14 +216,28 @@ void top_mid_tracks(){
      // cout << "Phi: " << n1.GetPhi() << endl;
 	//   if (theta <= 0.025){cout << "TROVATO THETA = 0 in evento" << evnum << " con theta: " << theta << " e phi: " << phi << " xyparamter: " << n1.XYGetParameter(1) << " yzparameter: " << n1.YZGetParameter(1) << endl; cin.get();}   
 	//	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "evento da contr: " << evnum << endl; cin.get();}
-	if (theta > 1.22) {cout << "HUGE THETA at evnum: " << evnum << endl;}
+	//	if (theta > 1.22) {cout << "HUGE THETA at evnum: " << evnum << endl;}
 	distheta->Fill(theta*180/3.14159);
 	disphi->Fill(phi*180/3.14159);
       }
    //  else {
    //  jj += 1;
    //  if (jj == 1) {chi2 << chi << endl; n1.XYDraw(); n1.YZDraw();}
-  
+  j = 0;
+    delete[] x;
+    delete[] y;
+    delete[] z;
+     delete evdisplay;
+  delete[] hit;
+  getline(run,line);
+  entry = "";
+  chi = 1000;
+  tempchi = 0;
+  continue;
+    }
+
+    //vedere se la traccia entra nella terza camera o meno!
+    
   j = 0;
     delete[] x;
     delete[] y;
@@ -241,7 +258,7 @@ void top_mid_tracks(){
    disz->SetBinContent(12,disz->GetBinContent(12)+ch3);
   
   }
-  else { //vedere se la traccia finisce sulla terza camera o no
+
    
   } }// cout << "FINE DEL DO" << endl;
 

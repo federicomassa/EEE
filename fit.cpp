@@ -254,7 +254,7 @@ void YZFit(){
       break;
     default:
       cout << "INVALID COORDINATE NUMBER: " << coord << endl;
-      return (-10000);
+      return (-5000);
     }};
     
     

@@ -42,13 +42,13 @@ void tracks(){
   TH1F* disphi = new TH1F("disp","Phi distribution", 90, 0, 360);
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,100,-400,400);
   TH1F* disx1 = new TH1F("disx1", "X Occupancy: Ch 1", 200,-100,100);
-  TH1F* disy1 = new TH1F("disy1", "Y Occupancy: Ch 1", 100,-400,400);
+  TH1F* disy1 = new TH1F("disy1", "Y Occupancy: Ch 1", 50,-400,400);
   TH2F* disxy2 = new TH2F("disxy2","XY Occupancy: Ch 2", 200,-100,100,100,-400,400);
   TH1F* disx2 = new TH1F("disx2", "X Occupancy: Ch 2", 200,-100,100);
-  TH1F* disy2 = new TH1F("disy2", "Y Occupancy: Ch 2", 100,-400,400);
+  TH1F* disy2 = new TH1F("disy2", "Y Occupancy: Ch 2", 50,-400,400);
   TH2F* disxy3 = new TH2F("disxy3","XY Occupancy: Ch 3", 200,-100,100,100,-400,400);
   TH1F* disx3 = new TH1F("disx3", "X Occupancy: Ch 3", 200,-100,100);
-  TH1F* disy3 = new TH1F("disy3", "Y Occupancy: Ch 3", 100,-400,400);
+  TH1F* disy3 = new TH1F("disy3", "Y Occupancy: Ch 3", 50,-400,400);
   TH1F* disz = new TH1F("disz", "Z Occupancy; Ch Number; #", 15,0,4);
   TH1F* disdist1 = new TH1F("disdist1","Distance distribution, Ch 1;Distance;#",200,0,600);
   TH1F* disdist2 = new TH1F("disdist2","Distance distribution, Ch 2;Distance;#",200,0,600);
