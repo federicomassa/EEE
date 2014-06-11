@@ -109,7 +109,7 @@ void count_test(){
     entry = ""; 
 
     continue;}
-    else if (ch1*ch2*ch3 == 1) {s_eff3+= 1; eff3 += 1;}
+    else if (ch1*ch3 == 1 && ch2 > 0) {s_eff3+= 1; eff3 += 1;}
     else eff3 += 1;
     j = 0;
     delete[] hit;

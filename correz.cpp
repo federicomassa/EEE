@@ -26,11 +26,22 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 void correz(){
+  int chnum = 0;
+  char dest[80] = "../Data/";
+  char ofile[80];
+  strcpy(ofile,dest);
+  char infile[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
+  strcat(dest,infile);
+  ifstream run(dest); //INPUT FILE 
+  char crr[80] = "CORR_";
+  strcat(ofile,crr);
+  strcat(ofile,infile);
+  ofstream crrfile(ofile);
   int check = 0;
   int bc1, bc2, bc3;
   double up1[24],up2[24],up3[24],low1[24],low2[24],low3[24];
   int evnum = 0;
-  ifstream run("../Data/EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE  
+ 
   TFile rfile("correzione.root","RECREATE");
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,400,-400,400);
   TH2F* disxy2 = new TH2F("disxy2","XY Occupancy: Ch 2", 200,-100,100,400,-400,400);
@@ -201,10 +212,60 @@ void correz(){
  cout << '\n' << '\n';
   }
 
+   cout << '\n' << "FINITO. ORA RICOMINCIA E CORREGGE" << '\n' << endl;
+
+   ////////////////////////////////////RICOMINCIA DA CAPO E CORREGGI ///////////////////////////////////////
+
+   j = 0;
+   run.seekg(0,ios::beg);
+
+  do{
+    getline(run,line);
+    crrfile << line << endl;
+  }
+  while (line.substr(11,5) != "EVENT");
+  
+    for (k = 0; k <= 50000; k++){
+
+  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
+      if (line.find("EVENT") > 15 ) {crrfile << line << endl; getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
+    linecount = GetHitCount(line);
+ if (linecount == 0){getline(run,line); continue;}
+
+      point* hit = new point[linecount];//alloca la memoria per tutti i punti dell'evento
+       //   cout << point::n << endl;
+  // cout << GetHitCount(line) << endl;
+  for (unsigned int i = 0; i < line.size()+1; i++) {
+    if(!isalnum(line[i]) && line[i] != '.' && line[i] != '-') {
+      j = j+1;
+      if (j < 9) crrfile << entry << ' ';
+      if (entry != "" && j == 4) {stringstream(entry) >> evnum; cout << "EVENTO NUMERO: " << evnum << endl;} 
+      if (entry != "" && j >= 9) {
+	stringstream(entry) >> number;
+	//  cout << number << endl;
+	hit[int(floor((double(j)-9)/3))].SetValue(j%3,number);
+	//	    cout << "OK" << endl;
+	if (j%3 == 2) {
+	  //	 chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
+       //divide l'evento nei vari punti
+	}
+	crrfile << number << ' ';
+      }
+      entry = "";}
+      else entry = entry + line.substr(i,1);
+  } //fine ciclo linea
+     j = 0;
+  delete[] hit;
+  getline(run,line);
+  entry = "";
+  crrfile << endl;}
+    
    disxy1->Write();
    disxy2->Write();
    disxy3->Write();
      rfile.Close();
      run.close();
+     crrfile.close();
 }
   
