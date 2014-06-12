@@ -26,6 +26,8 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 void correz(){
+  int stripnum = -1;
+  double corrx = 0, corry1 = 0, corry2 = 0, corry3 = 0;
   int chnum = 0;
   char dest[80] = "../Data/";
   char ofile[80];
@@ -48,7 +50,7 @@ void correz(){
   TH2F* disxy3 = new TH2F("disxy3","XY Occupancy: Ch 3", 200,-100,100,400,-400,400);
   triplet n1;
   int j = 0;
-  double number = 0;
+  double number = 0, numbery = 0, numberx = 0;
   string line;
   string entry = "";
   int ch1 = 0;
@@ -86,7 +88,7 @@ void correz(){
 	stringstream(entry) >> number;
 	//    	cout << number << endl;
 	hit[int(floor((double(j)-9)/3))].SetValue(j%3,number);
-	//	    cout << "OK" << endl;
+		    cout << "HIT VALUE IMPOSTATO" << endl;
 	if (j%3 == 2) {
 	  switch (hit[int(floor((double(j)-9)/3))].GetChNumber()) {
 	  case(1):
@@ -103,11 +105,12 @@ void correz(){
       entry = "";}
       else entry = entry + line.substr(i,1);
   } //fine ciclo linea
-
+  cout << "FINE CICLO LINEA" << endl;
 	  
   //   cout << "DOPO FOR" << endl;
  //Controllo la bontà dell'evento: ha almeno un hit per camera (top_bottom)?
   if (ch1 < 1 ||ch2 < 1 || ch3 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
+    cout << "EVENTO NON BUONO" << endl;
     j = 0; 
     delete [] hit;
     
@@ -130,9 +133,6 @@ void correz(){
   } //fine else evento buono
 
 
-
-
-  //  cout << "FIND: " << disxy1->GetXaxis()->FindBin(-60) << endl;
 
 
   j = 0;
@@ -197,20 +197,30 @@ void correz(){
   }
 
 
-   for (int bb = 0; bb < 24; bb++) {
- cout << up1[bb]-low1[bb] << endl;
- cout << "UP: " << up1[bb] << endl;
- cout << "LOW: " << low1[bb] << endl;
- cout << '\n';
- cout << up2[bb]-low2[bb] << endl;
- cout << "UP: " << up2[bb] << endl;
- cout << "LOW: " << low2[bb] << endl;
- cout << '\n';
- cout << up3[bb]-low3[bb] << endl;
- cout << "UP: " << up3[bb] << endl;
- cout << "LOW: " << low3[bb] << endl;
- cout << '\n' << '\n';
-  }
+ //   for (int bb = 0; bb < 24; bb++) {
+ // cout << up1[bb]-low1[bb] << endl;
+ // cout << "UP: " << up1[bb] << endl;
+ // cout << "LOW: " << low1[bb] << endl;
+ // cout << '\n';
+ // cout << up2[bb]-low2[bb] << endl;
+ // cout << "UP: " << up2[bb] << endl;
+ // cout << "LOW: " << low2[bb] << endl;
+ // cout << '\n';
+ // cout << up3[bb]-low3[bb] << endl;
+ // cout << "UP: " << up3[bb] << endl;
+ // cout << "LOW: " << low3[bb] << endl;
+ // cout << '\n' << '\n';
+ //  }
+
+   corrx = 82.0/(60.0+55.0);
+   for (int i = 0; i < 24; i++) {corry1 += up1[i]-low1[i]; corry2 += up2[i]-low2[i]; corry3 += up3[i] - low3[i];}
+   corry1 = corry1/22;  //strip mancanti: media
+   corry2 = corry2/23;
+   corry3 = corry3/21;
+
+   corry1 = 158.0/corry1;  //y rescaling
+   corry2 = 158.0/corry2;
+   corry3 = 158.0/corry3;
 
    cout << '\n' << "FINITO. ORA RICOMINCIA E CORREGGE" << '\n' << endl;
 
@@ -218,27 +228,23 @@ void correz(){
 
    j = 0;
    run.seekg(0,ios::beg);
+   getline(run,line);
 
-  do{
-    getline(run,line);
-    crrfile << line << endl;
-  }
-  while (line.substr(11,5) != "EVENT");
-  
-    for (k = 0; k <= 50000; k++){
+   do {
+   // for (k = 0; k <= 50000; k++){
 
   // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
-      if (line.find("EVENT") > 15 ) {crrfile << line << endl; getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
+     if (line.find("EVENT") > 15 ) {crrfile << line << endl; getline(run,line);j = 0; continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     linecount = GetHitCount(line);
- if (linecount == 0){getline(run,line); continue;}
+    if (linecount == 0){getline(run,line); j = 0; continue;}
 
       point* hit = new point[linecount];//alloca la memoria per tutti i punti dell'evento
        //   cout << point::n << endl;
   // cout << GetHitCount(line) << endl;
   for (unsigned int i = 0; i < line.size()+1; i++) {
     if(!isalnum(line[i]) && line[i] != '.' && line[i] != '-') {
-      j = j+1;
+      j += 1;
       if (j < 9) crrfile << entry << ' ';
       if (entry != "" && j == 4) {stringstream(entry) >> evnum; cout << "EVENTO NUMERO: " << evnum << endl;} 
       if (entry != "" && j >= 9) {
@@ -247,10 +253,14 @@ void correz(){
 	hit[int(floor((double(j)-9)/3))].SetValue(j%3,number);
 	//	    cout << "OK" << endl;
 	if (j%3 == 2) {
-	  //	 chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
-       //divide l'evento nei vari punti
-	}
+    	chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
+	if (chnum == 1) crrfile << (numbery - (up1[stripnum]+low1[stripnum])/2)*corry1 << ' ';
+	if (chnum == 2) crrfile << (numbery - (up2[stripnum]+low2[stripnum])/2)*corry2 << ' ';
+	if (chnum == 3) crrfile << (numbery - (up3[stripnum]+low3[stripnum])/2)*corry3 << ' ';
 	crrfile << number << ' ';
+	} 
+	if (j%3 == 0) {numberx = number; stripnum = int((numberx+60.0)/5.0); crrfile << numberx*corrx << ' ';}
+	if (j%3 == 1) numbery = number;
       }
       entry = "";}
       else entry = entry + line.substr(i,1);
@@ -260,6 +270,7 @@ void correz(){
   getline(run,line);
   entry = "";
   crrfile << endl;}
+   while (!run.eof());
     
    disxy1->Write();
    disxy2->Write();

@@ -16,7 +16,7 @@ using namespace std;
 
 int GetHitCount(string str){ //Calcola il numero di hits per evento
   int s = 0;
-  for (unsigned int i = 0; i < str.size(); i++) {
+  for (unsigned int i = 0; i < str.size()+1; i++) {
     if(!isalnum(str[i]) && str[i] != '.' && str[i] != '-') //se trova un carattere non alfanumerico o . allora è la fine di un blocco
       s = s+1;
   }
@@ -26,11 +26,10 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 void tracks(){  
-  bool bestvert;
-  double *besty = new double[3];
-  double parameter = 0;
+  bool bestvert = false;
+  //  double *besty = new double[3];
   // ifstream run("../Data/EEE_Prova_topbottom8900__20140530_174533.txt"); //INPUT FILE
-    ifstream run("../Data/EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE
+    ifstream run("../Data/CORR_EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE
   //  int point::n = 0;
     // TFile rfile("Disttopbot.root","RECREATE");
  TFile rfile("Dist_all.root","RECREATE");
@@ -60,7 +59,7 @@ void tracks(){
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
   triplet n1;
-  double chi = 1000, tempchi = 0,xytempchi = 0, xztempchi = 0, yztempchi = 0, theta = 1000, phi = 1000;
+  double chi = 1000, tempchi = 0,xytempchi = 0, /*xztempchi = 0, */ yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
   double number = 0;
   string line;
@@ -76,9 +75,9 @@ void tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-     for (k = 0; k <= 10000; k++){
+  //   for (k = 0; k <= 50000; k++){
 
-  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+   do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
      if (line.find("EVENT") > 15 ) {getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     ch1 = 0;
@@ -98,9 +97,7 @@ void tracks(){
       if (entry != "" && j == 4) {stringstream(entry) >> number; cout << "EVENTO NUMERO: " << number << endl;} 
       if (entry != "" && j >= 9) {
 	stringstream(entry) >> number;
-	//    	cout << number << endl;
 	hit[int(floor((double(j)-9)/3))].SetValue(j%3,number);
-	//	    cout << "OK" << endl;
 	if (j%3 == 2) {
 	  switch (hit[int(floor((double(j)-9)/3))].GetChNumber()) {
 	  case(1):
@@ -118,16 +115,15 @@ void tracks(){
       else entry = entry + line.substr(i,1);
   } //fine ciclo linea
 
- 
   double* x = new double[linecount];
   double* y = new double[linecount];
   double* z = new double[linecount];
-  
 
    for (int q = 0; q < linecount; q++){
      x[q] = hit[q].x;
      y[q] = hit[q].y;
      z[q] = hit[q].z;}
+
    TGraph2D* evdisplay = new TGraph2D(linecount,x,y,z);
     evdisplay->SetTitle("Event Display;X;Y;Z");
 
@@ -157,6 +153,7 @@ void tracks(){
     disdisty3->Fill(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y);
     }}
 	  
+
   //   cout << "DOPO FOR" << endl;
  //Controllo la bontà dell'evento: ha almeno un hit per camera?
   if (ch1 < 1 || ch2 < 1 || ch3 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
@@ -186,13 +183,13 @@ void tracks(){
    		  //		  cout << "PRIMA FIT" << endl;
    		  n1.XYFit();
    		  n1.YZFit();
-		  n1.XZFit();
+		  //	  n1.XZFit();
    		  //  cout << "DOPO FIT" << endl;
 		  if (!n1.vert)
 		  tempchi = (n1.XYGetChisquare_m()/*+n1.XZGetChisquare_m()*/ +n1.YZGetChisquare_m())/2; //tolto xz per sicurezza: potrebbe essere verticale
 		  else tempchi = n1.YZGetChisquare()/2;
    		  //		  cout << "DOPO CHI" << endl;
-   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);*/besty = n1.yv;bestvert = n1.vert;}
+   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);besty = n1.yv;bestvert = n1.vert;*/}
        }}}
    // if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "k: " << k << endl;}
    disxy1->Fill(n1.GetCoordinate(0,0),n1.GetCoordinate(1,0));
@@ -217,7 +214,7 @@ void tracks(){
      // cout << "Phi: " << n1.GetPhi() << endl;
 	//   if (theta <= 0.025){cout << "TROVATO THETA = 0 in evento" << k << " con theta: " << theta << " e phi: " << phi << " xyparamter: " << n1.XYGetParameter(1) << " yzparameter: " << n1.YZGetParameter(1) << endl; cin.get();}   
 	//	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "k da contr: " << k << endl; cin.get();}
-	if (theta > 1.22) {cout << "HUGE THETA at k: " << k << endl;}
+	//	if (theta > 1.22) {cout << "HUGE THETA at k: " << k << endl;}
 	distheta->Fill(theta*180/3.14159);
 	disphi->Fill(phi*180/3.14159);
        }
@@ -249,7 +246,7 @@ void tracks(){
 
 
 
-     //	  	  while (!run.eof());
+       	  while (!run.eof());
      // TCanvas* thetacanv = new TCanvas();
      // thetacanv->SetGrid();
      // thetacanv->cd();
