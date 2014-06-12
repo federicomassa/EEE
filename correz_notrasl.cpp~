@@ -88,6 +88,7 @@ void correz(){
 	stringstream(entry) >> number;
 	//    	cout << number << endl;
 	hit[int(floor((double(j)-9)/3))].SetValue(j%3,number);
+		    cout << "HIT VALUE IMPOSTATO" << endl;
 	if (j%3 == 2) {
 	  switch (hit[int(floor((double(j)-9)/3))].GetChNumber()) {
 	  case(1):
@@ -104,10 +105,12 @@ void correz(){
       entry = "";}
       else entry = entry + line.substr(i,1);
   } //fine ciclo linea
+  cout << "FINE CICLO LINEA" << endl;
 	  
   //   cout << "DOPO FOR" << endl;
  //Controllo la bontà dell'evento: ha almeno un hit per camera (top_bottom)?
   if (ch1 < 1 ||ch2 < 1 || ch3 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
+    cout << "EVENTO NON BUONO" << endl;
     j = 0; 
     delete [] hit;
     
@@ -251,9 +254,9 @@ void correz(){
 	//	    cout << "OK" << endl;
 	if (j%3 == 2) {
     	chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
-	if (chnum == 1) crrfile << (numbery - (up1[stripnum]+low1[stripnum])/2)*corry1 << ' ';
-	if (chnum == 2) crrfile << (numbery - (up2[stripnum]+low2[stripnum])/2)*corry2 << ' ';
-	if (chnum == 3) crrfile << (numbery - (up3[stripnum]+low3[stripnum])/2)*corry3 << ' ';
+	if (chnum == 1) crrfile << numbery*corry1 << ' ';
+	if (chnum == 2) crrfile << numbery*corry2 << ' ';
+	if (chnum == 3) crrfile << numbery*corry3 << ' ';
 	crrfile << number << ' ';
 	} 
 	if (j%3 == 0) {numberx = number; stripnum = int((numberx+60.0)/5.0); crrfile << numberx*corrx << ' ';}

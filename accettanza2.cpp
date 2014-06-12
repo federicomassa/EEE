@@ -8,43 +8,14 @@
 #include <TRandom3.h>
 
 //lati lunghi = 48.5 cm, lati corti = 40 cm, spessore = 1.2 cm, distanze relative 10,2 cm
-double L1L = 82; //cm
-double L1S = 158; //cm
-double L2L= 82; //cm
-double L2S= 158; // cm
-double L3L= 82; //cm
-double L3S = 158; //cm
-double h = 2.5; //cm
+double xmax = 82; //cm
+double ymax = 158; //cm
 double D12 = 60;// cm
 double D23 = 62; //cm
 int imax = 200000;
 
 using namespace std;
 
-void cell(int n, double x, double y, int& xn, int& yn){
-  double LS, LL;
-  switch (n) {
-  case 1:
-    LS = L1S;
-    LL = L1L;
-    break;
-  case 2:
-    LS = L2S;
-    LL = L2L;
-    break;
-  case 3:
-    LS = L3S;
-    LL = L3L;
-    break;
-  default:
-    cout << "Numero piano non valido" << endl;
-  }
-  xn = ceil(3*(x+LL/2.)/LL);
-  yn = ceil(3*(y+LS/2.)/LS);
-  if (xn > 3 || xn < 1) cout << "Fuori scala x" << endl;
-  else if (yn > 3 || yn < 1) cout << "Fuori scala y" << endl;
-  
-}
 
 void accettanza(){
 	TH1F* htheta = new TH1F("dis_acctheta","Distribuzione Theta accettati", 50, 0, 90);
@@ -56,37 +27,34 @@ void accettanza(){
   ofstream* accphi = new ofstream("accphi.dat");
   //efficienze
   //  float eps1 [3][3] = {{0.612,0.662,0.762},{0.425,0.470,0.612},{0.574,0.618,0.722}};
-  float eps1 [3][3] = {{1,1,1},{1,1,1},{1,1,1}};
-  float eps2 [3][3] = {{1,1,1},{1,1,1},{1,1,1}};
-  float eps3 [3][3] = {{1,1,1},{1,1,1},{1,1,1}};
-  double theta, W,Y,Z, phi,x1,x2,x3,y1,y2,y3,z1,z2,z3;
+  float eps1 = 1;
+  float eps2 = 1;
+  float eps3 = 1;
+  double theta, W1,W2,W3, phi,x1,x2,x3,y1,y2,y3,z1,z2,z3;
   int j = 0;
-  int nx1, nx2, nx3, ny1, ny2, ny3;
 
   for (int i = 1; i <= imax;) {
     theta = rndgen.Uniform(2*atan(1.)); 
-    W = rndgen.Uniform(1);
-    if (sin(theta)*pow(cos(theta),2) > W) {
+    W1 = rndgen.Uniform(1);
+    if (sin(theta)*pow(cos(theta),2) > W1) {
       *dtheta << theta << endl;
       i+=1;
       if (i%5000 == 0) cout << double(i)/double(imax)*100 << "%" << endl;
       phi = rndgen.Uniform(8*atan(1.));
-      x2 = (rndgen.Uniform(L1L)-L1L/2.);
-      y2 = (rndgen.Uniform(L1S)-L1S/2.);
+      x2 = (rndgen.Uniform(xmax)-xmax/2.);
+      y2 = (rndgen.Uniform(ymax)-ymax/2.);
       x1 = tan(theta)*cos(phi)*D12 + x2;
       y1 = tan(theta)*sin(phi)*D12 + y2;
       z1 = D12;
       x3 = -tan(theta)*cos(phi)*D23+x2;
       y3 = -tan(theta)*sin(phi)*D23 + y2;
       z3 = -D23;
-      if ((pow(x1,2) <= pow(L1L,2)/4) && (pow(y1,2) <= pow(L1S,2)/4) && (pow(x3,2) <= pow(L3L,2)/4) && (pow(y3,2) <= pow(L3S,2)/4)){
-	cell (1,x1,y1,nx1,ny1);
-	cell (2,x2,y2,nx2,ny2);
-	cell (3,x3,y3,nx3,ny3);
-	W = rndgen.Uniform(1);
-	Y = rndgen.Uniform(1);
-	Z = rndgen.Uniform(1);
-	//	if (W < eps1[nx1-1][ny1-1] && Y < eps2[nx2-1][ny2-1] && Z < eps3[nx3-1][ny3-1]) 
+      W1 = rndgen.Uniform(1);
+      W2 = rndgen.Uniform(1);
+      W3 = rndgen.Uniform(1);
+      
+      if ((pow(x1,2) <= pow(xmax,2)/4) && (pow(y1,2) <= pow(ymax,2)/4) && (pow(x3,2) <= pow(xmax,2)/4) && (pow(y3,2) <= pow(ymax,2)/4) && W1 < eps1 && W2 < eps2 && W3 < eps3){
+
 	*acctheta << theta << endl;
 	*accphi << phi << endl;
 	htheta->Fill(theta*180/3.14159);
@@ -94,7 +62,8 @@ void accettanza(){
 	j+=1;}
     }
   }
-  hphi->Scale(36242.0/47781.0);
+  htheta->Scale(36186.0/double(j));
+  hphi->Scale(36186.0/double(j));
   
   htheta->Write();
   hphi->Write();

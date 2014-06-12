@@ -35,7 +35,7 @@ void correz(){
   char infile[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
   strcat(dest,infile);
   ifstream run(dest); //INPUT FILE 
-  char crr[80] = "CORR_";
+  char crr[80] = "CORR_NOTRASL";
   strcat(ofile,crr);
   strcat(ofile,infile);
   ofstream crrfile(ofile);
@@ -44,7 +44,7 @@ void correz(){
   double up1[24],up2[24],up3[24],low1[24],low2[24],low3[24];
   int evnum = 0;
  
-  TFile rfile("correzione.root","RECREATE");
+  TFile rfile("correzione_notrasl.root","RECREATE");
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,400,-400,400);
   TH2F* disxy2 = new TH2F("disxy2","XY Occupancy: Ch 2", 200,-100,100,400,-400,400);
   TH2F* disxy3 = new TH2F("disxy3","XY Occupancy: Ch 3", 200,-100,100,400,-400,400);
@@ -251,9 +251,9 @@ void correz(){
 	//	    cout << "OK" << endl;
 	if (j%3 == 2) {
     	chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
-	if (chnum == 1) crrfile << (numbery - (up1[stripnum]+low1[stripnum])/2)*corry1 << ' ';
-	if (chnum == 2) crrfile << (numbery - (up2[stripnum]+low2[stripnum])/2)*corry2 << ' ';
-	if (chnum == 3) crrfile << (numbery - (up3[stripnum]+low3[stripnum])/2)*corry3 << ' ';
+	if (chnum == 1) crrfile << numbery*corry1 << ' ';
+	if (chnum == 2) crrfile << numbery*corry2 << ' ';
+	if (chnum == 3) crrfile << numbery*corry3 << ' ';
 	crrfile << number << ' ';
 	} 
 	if (j%3 == 0) {numberx = number; stripnum = int((numberx+60.0)/5.0); crrfile << numberx*corrx << ' ';}

@@ -32,13 +32,13 @@ void tracks(){
     ifstream run("../Data/CORR_EEE_PISA01TestRun4Telescopes_20140507_014455.txt"); //INPUT FILE
   //  int point::n = 0;
     // TFile rfile("Disttopbot.root","RECREATE");
- TFile rfile("Dist_all.root","RECREATE");
-  TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
+ TFile rfile("Dist_all_trasl.root","RECREATE");
+  TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,50);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
   TH1F* hpc3 = new TH1F("hpc3", "Hit per chamber /Chamber 3;#Hits;#", 20,0,20);
   TH1F* distheta = new TH1F("dist","Theta distribution", 50, 0,90);
-  TH1F* disphi = new TH1F("disp","Phi distribution", 90, 0, 360);
+  TH1F* disphi = new TH1F("disp","Phi distribution", 18, 0, 360);
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,100,-400,400);
   TH1F* disx1 = new TH1F("disx1", "X Occupancy: Ch 1", 200,-100,100);
   TH1F* disy1 = new TH1F("disy1", "Y Occupancy: Ch 1", 50,-400,400);
@@ -58,6 +58,7 @@ void tracks(){
   TH1F* disdisty1 = new TH1F("disdisty1","Y Distance distribution, Ch1;Y Distance;#",800,-400,400);
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
+  TH2F* thetaphi = new TH2F("thetaphi","Theta-Phi Correlation", 50,0,90,100,0,360);
   triplet n1;
   double chi = 1000, tempchi = 0,xytempchi = 0, /*xztempchi = 0, */ yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
@@ -189,7 +190,7 @@ void tracks(){
 		  tempchi = (n1.XYGetChisquare_m()/*+n1.XZGetChisquare_m()*/ +n1.YZGetChisquare_m())/2; //tolto xz per sicurezza: potrebbe essere verticale
 		  else tempchi = n1.YZGetChisquare()/2;
    		  //		  cout << "DOPO CHI" << endl;
-   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);besty = n1.yv;bestvert = n1.vert;*/}
+   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);besty = n1.yv;*/ bestvert = n1.vert;}
        }}}
    // if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "k: " << k << endl;}
    disxy1->Fill(n1.GetCoordinate(0,0),n1.GetCoordinate(1,0));
@@ -208,7 +209,7 @@ void tracks(){
   
    //Riempiamo gli istogrammi di theta e phi se il fit è andato bene. Se è verticale considero solamente una sezione
       //     if (phi > 1.5 && phi < 1.64 && yztempchi > 30 && bestvert) {cout << "y sospette: " << besty[0] << '\t' << besty[1] << '\t' << besty[2] << endl; cout << "k: " << k << endl; cin.get();}
-      if( ((xytempchi>0 || bestvert) && yztempchi/**xztempchi*/ > 0) && (xytempchi < 30 || bestvert) && (yztempchi < 30)/* && (xztempchi < 10)*/ ){
+      if( ((xytempchi>0 || bestvert) && yztempchi/**xztempchi*/ > 0) && (xytempchi < 10 || bestvert) && (yztempchi < 10)/* && (xztempchi < 10)*/ ){
      // cout << "Fit con chi2: " << chi << endl;
      // cout << "Theta: " << n1.GetTheta() << endl;
      // cout << "Phi: " << n1.GetPhi() << endl;
@@ -217,6 +218,7 @@ void tracks(){
 	//	if (theta > 1.22) {cout << "HUGE THETA at k: " << k << endl;}
 	distheta->Fill(theta*180/3.14159);
 	disphi->Fill(phi*180/3.14159);
+	thetaphi->Fill(theta*180/3.14159,phi*180/3.14159);
        }
    //  else {
    //  jj += 1;
@@ -256,6 +258,7 @@ void tracks(){
        //phicanv->SetGrid();
       //phicanv->cd();
   //   disphi->Draw();
+   thetaphi->Write();
    disdist1->Write();
    disdist2->Write();
    disdist3->Write();
