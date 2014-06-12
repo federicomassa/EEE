@@ -38,7 +38,7 @@ void tracks(){
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
   TH1F* hpc3 = new TH1F("hpc3", "Hit per chamber /Chamber 3;#Hits;#", 20,0,20);
   TH1F* distheta = new TH1F("dist","Theta distribution", 50, 0,90);
-  TH1F* disphi = new TH1F("disp","Phi distribution", 18, 0, 360);
+  TH1F* disphi = new TH1F("disp","Phi distribution", 90, 0, 360);
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,100,-400,400);
   TH1F* disx1 = new TH1F("disx1", "X Occupancy: Ch 1", 200,-100,100);
   TH1F* disy1 = new TH1F("disy1", "Y Occupancy: Ch 1", 50,-400,400);
@@ -58,7 +58,7 @@ void tracks(){
   TH1F* disdisty1 = new TH1F("disdisty1","Y Distance distribution, Ch1;Y Distance;#",800,-400,400);
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
-  TH2F* thetaphi = new TH2F("thetaphi","Theta-Phi Correlation", 50,0,90,100,0,360);
+  TH2F* thetaphi = new TH2F("phi-teta","Phi-Theta Correlation;Phi(°);Theta(°)", 100,0,360,50,0,90);
   triplet n1;
   double chi = 1000, tempchi = 0,xytempchi = 0, /*xztempchi = 0, */ yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
@@ -218,7 +218,7 @@ void tracks(){
 	//	if (theta > 1.22) {cout << "HUGE THETA at k: " << k << endl;}
 	distheta->Fill(theta*180/3.14159);
 	disphi->Fill(phi*180/3.14159);
-	thetaphi->Fill(theta*180/3.14159,phi*180/3.14159);
+	thetaphi->Fill(phi*180/3.14159,theta*180/3.14159);
        }
    //  else {
    //  jj += 1;
