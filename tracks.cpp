@@ -33,7 +33,7 @@ void tracks(){
   //  int point::n = 0;
     // TFile rfile("Disttopbot.root","RECREATE");
  TFile rfile("Dist_all_trasl.root","RECREATE");
-  TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,50);
+  TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,10);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
   TH1F* hpc3 = new TH1F("hpc3", "Hit per chamber /Chamber 3;#Hits;#", 20,0,20);
@@ -58,7 +58,7 @@ void tracks(){
   TH1F* disdisty1 = new TH1F("disdisty1","Y Distance distribution, Ch1;Y Distance;#",800,-400,400);
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
-  TH2F* thetaphi = new TH2F("phi-teta","Phi-Theta Correlation;Phi(°);Theta(°)", 100,0,360,50,0,90);
+  TH2F* thetaphi = new TH2F("phi-teta","Phi-Theta Correlation;Phi(°);Theta(°)", 90,0,360,50,0,90);
   triplet n1;
   double chi = 1000, tempchi = 0,xytempchi = 0, /*xztempchi = 0, */ yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
@@ -209,7 +209,7 @@ void tracks(){
   
    //Riempiamo gli istogrammi di theta e phi se il fit è andato bene. Se è verticale considero solamente una sezione
       //     if (phi > 1.5 && phi < 1.64 && yztempchi > 30 && bestvert) {cout << "y sospette: " << besty[0] << '\t' << besty[1] << '\t' << besty[2] << endl; cout << "k: " << k << endl; cin.get();}
-      if( ((xytempchi>0 || bestvert) && yztempchi/**xztempchi*/ > 0) && (xytempchi < 10 || bestvert) && (yztempchi < 10)/* && (xztempchi < 10)*/ ){
+      if( ((xytempchi>0 || bestvert) && yztempchi/**xztempchi*/ > 0) && (xytempchi < 2.5 || bestvert) && (yztempchi < 2.5)/* && (xztempchi < 10)*/ ){
      // cout << "Fit con chi2: " << chi << endl;
      // cout << "Theta: " << n1.GetTheta() << endl;
      // cout << "Phi: " << n1.GetPhi() << endl;

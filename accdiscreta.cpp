@@ -6,15 +6,16 @@
 #include <TH1F.h>
 #include <TFile.h>
 #include <TRandom3.h>
+#include <TH2F.h>
 #include "fit.cpp"
 
-//lati lunghi = 48.5 cm, lati corti = 40 cm, spessore = 1.2 cm, distanze relative 10,2 cm
+//lati lunghi = 48.5 cm, lati corti = 40 cm, spessore = 1.2 cm, distanze relative 10,2 cm (scintillatori per flusso raggi cosmici)
 double xmax = 82; //cm
 double ymax = 158; //cm
 double D12 = 60;// cm
 double D23 = 62; //cm
 int imax = 200000;
-double strd = 5; //unità arbitrarie, distanza tra due strip considerate filiformi ---- CORRETTA -----
+double strd = 82.0/24.0; //unità arbitrarie, distanza tra due strip considerate filiformi ---- CORRETTA -----
 double stheta;
 double sphi;
 using namespace std;
@@ -23,19 +24,21 @@ using namespace std;
 double xstrip(double xx){ // returns the x-coordinate of the strip (actually its region of influence) the generated point falls in
   int strnum;
   double xs;
-  if (xx >= 0) strnum=int((xx+strd/2)/strd);
-  else strnum=int((xx-strd/2)/strd);
-  xs=double(strnum)*strd;
+  if (xx >= 0) {strnum=int(xx/strd); xs = double(strnum)*strd+strd/2;}
+  else {strnum=int((xx)/strd); xs = double(strnum)*strd-strd/2;}
   return xs;
 }
 
 void accdiscreta(){
+  double chi = 0;
   point p1,p2,p3;
 triplet n1;
 	TH1F* htheta = new TH1F("dis_acctheta","Distribuzione Theta accettati", 50, 0, 90);
 	// TH1F* hrestheta = new TH1F("dis_restheta","Distribuzione Theta-Theta_quantizzato accettati", 50, 0, 90);
 // TH1F* hrestheta = new TH1F("dis_restheta","Distribuzione Theta-Theta_quantizzato accettati", 50, 0, 90);
 	TH1F* hphi = new TH1F("dis_accphi", "Distribuzione Phi accettati", 90, 0, 360);
+	TH1F* distchi = new TH1F("dis_chi", "Distribuzione Chi2", 50, 0, 10);
+	TH2F* phitheta = new TH2F("phitheta","Phi-Theta Correlation;phi(°);theta(°)",90,0,360,50,0,90);
 	TFile rfile("accettanza.root","RECREATE");
 	TRandom3 rndgen;
   ofstream* dtheta = new ofstream("theta.dat");
@@ -89,17 +92,36 @@ triplet n1;
 	theta=n1.GetTheta();
 
 	phi=n1.GetPhi();
+	chi = n1.XYGetChisquare();
+	chi += n1.XZGetChisquare();
+	chi += n1.YZGetChisquare();
+	chi = chi/3.0;
+
+	if (chi == 0) {
+	  cout << "p1 x: " << p1.x << " p1 y: " << p1.y << " p1 z: " << p1.z << endl;
+	  cout << "p2 x: " << p2.x << " p2 y: " << p2.y << " p2 z: " << p2.z << endl;
+	  cout << "p3 x: " << p3.x << " p3 y: " << p3.y << " p3 z: " << p3.z << endl;
+	  cout << '\n';
+	  cin.get();
+	}
+	  
+	  
 
 	*acctheta << theta << endl;
 	*accphi << phi << endl;
 	htheta->Fill(theta*180/3.14159);
 	hphi->Fill(phi*180/3.14159);
+	phitheta->Fill(phi*180/3.14159,theta*180/3.14159);
+	  distchi->Fill(chi);
 	j+=1;}
     }
   }
-  htheta->Scale(36186.0/double(j));
-  hphi->Scale(36186.0/double(j));
-  
+  distchi->Write();
+
+  htheta->Scale(30751.0/double(j));
+  hphi->Scale(30751.0/double(j));
+
+  phitheta->Write();
   htheta->Write();
   hphi->Write();
   rfile.Close();
