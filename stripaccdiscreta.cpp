@@ -46,6 +46,7 @@ triplet n1;
 
 	TH2F* dthvsth = new TH2F("dthvsth","Stheta-Theta vs. Theta Correlation;stheta-theta(°);theta(°)",400,-4,4,60,0,60);
 	TH2F* dphvsph = new TH2F("dphvsph","Sphi-phi vs. phi Correlation;sphi-phi(°);phi(°)",500,-100,100,360,0,360);
+	TH2F* dphcritvsth = new TH2F("dphcritvsth","Sphi-phi vs. Theta Correlation, sPhi=90,270;theta(°);sphi-phi(°)",500,0,40,500,-100,100);
 
         TH1F* hresphi = new TH1F("dis_resphi","Distribuzione Phi-Phi_quantizzato accettati", 40, -20, 20);
 	TH1F* hphi = new TH1F("dis_accphi", "Distribuzione Phi accettati", 90, 0, 360);	
@@ -139,7 +140,10 @@ triplet n1;
 	  hsphi->Fill(sphi*180/3.1415);
 	  hresphi->Fill((sphi-phi)*180/3.14159);
 	  dphvsph->Fill((sphi-phi)*180/3.14159,phi*180/3.14159);
-	
+	  if ( absval(sphi*180/3.14159-90.0)<2.5 || absval(sphi*180/3.14159-270.0)<2.5) {
+	    // cout << "inside" << endl;
+	    dphcritvsth->Fill(theta*180/3.14159,(sphi-phi)*180/3.14159);
+	  }
 	  phitheta->Fill(phi*180/3.14159,theta*180/3.14159);
 	  sphistheta->Fill(sphi*180/3.14159,stheta*180/3.14159);
 	  distchi->Fill(chi);
@@ -168,6 +172,8 @@ triplet n1;
 
   dthvsth->Write();
   dphvsph->Write();
+
+  dphcritvsth->Write();
 
   rfile.Close();
   dtheta->close();

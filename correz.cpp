@@ -29,22 +29,26 @@ void correz(){
   int stripnum = -1;
   double corrx = 0, corry1 = 0, corry2 = 0, corry3 = 0;
   int chnum = 0;
-  char dest[80] = "../Data/";
+  char dest1[80] = "../Data/";
+  char dest2[80] = "../Data/";
   char ofile[80];
-  strcpy(ofile,dest);
-  char infile[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
-  strcat(dest,infile);
-  ifstream run(dest); //INPUT FILE 
+  strcpy(ofile,dest2);
+   char infile1[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
+   char infile2[80] = "EEE_Prova_topbottom8900__20140530_174533.txt";
+  strcat(dest1,infile1);
+  strcat(dest2,infile2);
+  ifstream run(dest1); //INPUT FILE 
+  ifstream tobecorr(dest2);
   char crr[80] = "CORR_";
   strcat(ofile,crr);
-  strcat(ofile,infile);
+  strcat(ofile,infile2);
   ofstream crrfile(ofile);
   int check = 0;
   int bc1, bc2, bc3;
   double up1[24],up2[24],up3[24],low1[24],low2[24],low3[24];
   int evnum = 0;
  
-  TFile rfile("correzione.root","RECREATE");
+  TFile rfile("correzione_andall.root","RECREATE");
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,400,-400,400);
   TH2F* disxy2 = new TH2F("disxy2","XY Occupancy: Ch 2", 200,-100,100,400,-400,400);
   TH2F* disxy3 = new TH2F("disxy3","XY Occupancy: Ch 3", 200,-100,100,400,-400,400);
@@ -64,9 +68,9 @@ void correz(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-     for (k = 0; k <= 50000; k++){
+  //    for (k = 0; k <= 50000; k++){
 
-  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+   do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
      if (line.find("EVENT") > 15 ) {getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     ch1 = 0;
@@ -139,11 +143,11 @@ void correz(){
   //Bin per chamber histograms
    
 
-     }
+    }
 
 
 
-     //	  	  while (!run.eof());
+     	  while (!run.eof());
    for (int a = 0; a < 24; a++) {
      for (int b = 1; b <= 200; b++) {
        bc1 = disxy1->GetBinContent(41+5*a,b+200);
@@ -222,19 +226,19 @@ void correz(){
    cout << '\n' << "FINITO. ORA RICOMINCIA E CORREGGE" << '\n' << endl;
 
    ////////////////////////////////////RICOMINCIA DA CAPO E CORREGGI ///////////////////////////////////////
-
+   run.close();
+   k = -1;
    j = 0;
-   run.seekg(0,ios::beg);
-   getline(run,line);
 
-   do {
+   getline(tobecorr,line);
+
    // for (k = 0; k <= 50000; k++){
 
-  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+   do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
-     if (line.find("EVENT") > 15 ) {crrfile << line << endl; getline(run,line);j = 0; continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
+     if (line.find("EVENT") > 15 ) {crrfile << line << endl; getline(tobecorr,line);j = 0; continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     linecount = GetHitCount(line);
-    if (linecount == 0){getline(run,line); j = 0; continue;}
+    if (linecount == 0){getline(tobecorr,line); j = 0; continue;}
 
       point* hit = new point[linecount];//alloca la memoria per tutti i punti dell'evento
        //   cout << point::n << endl;
@@ -264,16 +268,16 @@ void correz(){
   } //fine ciclo linea
      j = 0;
   delete[] hit;
-  getline(run,line);
+  getline(tobecorr,line);
   entry = "";
   crrfile << endl;}
-   while (!run.eof());
+   while (!tobecorr.eof());
     
    disxy1->Write();
    disxy2->Write();
    disxy3->Write();
      rfile.Close();
-     run.close();
+     tobecorr.close();
      crrfile.close();
 }
   
