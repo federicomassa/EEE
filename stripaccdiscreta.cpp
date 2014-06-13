@@ -29,7 +29,14 @@ double xstrip(double xx){ // returns the x-coordinate of the strip (actually its
   return xs;
 }
 
-void accdiscreta(){
+double nstrip(double xx){ // returns the ordinal number of the strip affected. ambiguity in 0
+  int strnum;
+  if (xx >= 0) {strnum=int(xx/strd);}
+  else {strnum=int((xx)/strd);}
+  return strnum;
+}
+
+void stripaccdiscreta(){
   double chi = 0;
   point p1,p2,p3;
 triplet n1;
@@ -47,7 +54,7 @@ triplet n1;
 	TH1F* distchi = new TH1F("dis_chi", "Distribuzione Chi2", 50, 0, 10);
 	TH2F* phitheta = new TH2F("phitheta","Phi-Theta Correlation;phi(°);theta(°)",90,0,360,50,0,90);
 	TH2F* sphistheta = new TH2F("sphistheta","sPhi-sTheta Correlation;sphi(°);stheta(°)",90,0,360,50,0,90);
-	TFile rfile("accettanza.root","RECREATE");
+	TFile rfile("accettanza_missing_strips.root","RECREATE");
 	TRandom3 rndgen;
   ofstream* dtheta = new ofstream("theta.dat");
   ofstream* acctheta = new ofstream("acctheta.dat");
@@ -59,7 +66,7 @@ triplet n1;
   float eps3 = 1;
   double theta, W1,W2,W3, phi,x1,x2,x3,y1,y2,y3,z1,z2 = 0,z3,xs1,xs2,xs3;
   int j = 0;
-
+  int ns1, ns2,ns3;
 
   for (int i = 1; i <= imax;) {
     theta = rndgen.Uniform(2*atan(1.)); 
@@ -83,6 +90,9 @@ triplet n1;
       
       if ((pow(x1,2) <= pow(xmax,2)/4) && (pow(y1,2) <= pow(ymax,2)/4) && (pow(x3,2) <= pow(xmax,2)/4) && (pow(y3,2) <= pow(ymax,2)/4) && W1 < eps1 && W2 < eps2 && W3 < eps3){
 
+	ns1=nstrip(x1);
+	ns2=nstrip(x2);
+	ns3=nstrip(x3);
 
 	xs1=xstrip(x1);
 	xs2=xstrip(x2);
@@ -115,7 +125,7 @@ triplet n1;
 	  cin.get();
 	}
 	  
-
+	if (ns1 !=-3 && ns1 !=10 && ns2 !=-2 && ns3 != 8 && ns3 != 6 && ns3 !=4) {
 	
 	  *acctheta << theta << endl;
 	  *accphi << phi << endl;
@@ -133,8 +143,9 @@ triplet n1;
 	  phitheta->Fill(phi*180/3.14159,theta*180/3.14159);
 	  sphistheta->Fill(sphi*180/3.14159,stheta*180/3.14159);
 	  distchi->Fill(chi);
-	  
-	j+=1;}
+	  j+=1;
+	}
+	 }
     }
   }
   distchi->Write();
