@@ -1,0 +1,75 @@
+
+# DO NOT DELETE
+
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TF1.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TFormula.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TNamed.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TObject.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Rtypes.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/RConfig.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/RVersion.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/DllImport.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Rtypeinfo.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/snprintf.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/strlcpy.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TGenericClassInfo.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TSchemaHelper.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TStorage.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVersionCheck.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Riosfwd.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TBuffer.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TString.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TMathBase.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TBits.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TObjArray.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TSeqCollection.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TCollection.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TIterator.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttLine.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttFill.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttMarker.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Math/ParamFunctor.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TGraphErrors.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TGraph.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVectorFfwd.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVectorDfwd.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TFitResultPtr.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TH1F.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TH1.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAxis.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttAxis.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArrayD.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArray.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArrayC.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArrayS.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArrayI.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TArrayF.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Foption.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TH2F.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TH2.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TMatrixFBasefwd.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TMatrixDBasefwd.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TGraph2D.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVirtualHistPainter.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TFile.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TDirectoryFile.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TDirectory.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TList.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TDatime.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TUUID.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TMap.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/THashTable.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TUrl.h fit.cpp
+./scint_eff_cpp.so: hit.cpp /home/federico/Scaricati/root/include/TCanvas.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TPad.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVirtualPad.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttPad.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TVirtualX.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttText.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/GuiTypes.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/Buttons.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TQObject.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TAttCanvas.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/TCanvasImp.h
+./scint_eff_cpp.so: /home/federico/Scaricati/root/include/cintdictversion.h /home/federico/Scaricati/root/include/RVersion.h
+scint_eff_cpp__ROOTBUILDVERSION= 5.34/11

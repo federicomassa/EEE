@@ -16,7 +16,7 @@ using namespace std;
 
 int GetHitCount(string str){ //Calcola il numero di hits per evento
   int s = 0;
-  for (unsigned int i = 0; i < str.size()+1; i++) {
+  for (unsigned int i = 0; i < str.size(); i++) {
     if(!isalnum(str[i]) && str[i] != '.' && str[i] != '-') //se trova un carattere non alfanumerico o . allora è la fine di un blocco
       s = s+1;
   }
@@ -25,12 +25,15 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 
-void top_bot_tracks(){
+void scint_eff(){
+  int c1 = 0, c2 = 0, c3 = 0;
   int evnum = 0;
-  int effc3 = 0, effc2 = 0, efft3 = 0, efft2 = 0;
-  bool bestvert = false;
-   ifstream run("../Data/CORR_EEE_Prova_topbottom8900__20140530_174533.txt"); //INPUT FILE  
-  TFile rfile("Disttopbot8900.root","RECREATE");
+  int eff3 = 0, eff2 = 0;
+  bool bestvert;
+  double *besty = new double[3];
+  double parameter = 0;
+   ifstream run("../Data/EEE_Prova_SCINT9000__20140603_175916.txt"); //INPUT FILE  
+  TFile rfile("scint9000.root","RECREATE");
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
@@ -57,7 +60,7 @@ void top_bot_tracks(){
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
   triplet n1;
-  double chi = 1000, tempchi = 0,xytempchi = 0, yztempchi = 0, theta = 1000, phi = 1000;
+  double chi = 1000, tempchi = 0,xytempchi = 0, xztempchi = 0, yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
   double number = 0;
   string line;
@@ -73,9 +76,9 @@ void top_bot_tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-     for (k = 0; k <= 10000; k++){
+  //  for (k = 0; k <= 10000; k++){
 
-  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+   do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
      if (line.find("EVENT") > 15 ) {getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     ch1 = 0;
@@ -121,7 +124,6 @@ void top_bot_tracks(){
   double* z = new double[linecount];
   
 
-
    for (int q = 0; q < linecount; q++){
      x[q] = hit[q].x;
      y[q] = hit[q].y;
@@ -148,7 +150,6 @@ void top_bot_tracks(){
     disdisty2->Fill(hit[h+ch1].y-hit[p+ch1].y);
     }}
 
-
  for (int h = ch3; h > 0; h--){
     for(int p = ch3-1; p < h && p >= 0; p--){
 	  disdist3->Fill(pow(pow(hit[h+ch1+ch2].x-hit[p+ch1+ch2].x,2)+pow(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y,2),0.5));
@@ -156,56 +157,7 @@ void top_bot_tracks(){
     disdisty3->Fill(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y);
     }}
 	  
-  //   cout << "DOPO FOR" << endl;
- //Controllo la bontà dell'evento: ha almeno un hit per camera (top_bottom)?
-  if (ch1 < 1 || ch3 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
-    j = 0; 
-    delete [] hit;
-    // cout << point::n << endl;
-    delete[] x;
-    delete[] y;
-    delete[] z;
-     delete evdisplay;
-    getline(run,line);
-    entry = ""; 
 
-    continue;} //Evento non buono: prossimo evento
-
-  else { //evento con almeno un hit per camera (top_bottom)
-       //    for (int kk = 0; kk < 3; kk++) {
-    //	cout << hit[kk].x << endl;
-    //	cout << hit[kk].y << endl;
-    //	cout << hit[kk].z << endl;}
-    effc2 += 1;
-    efft2 += 1;
-    if (ch2 < 1) { j = 0; 
-    delete [] hit;
-    // cout << point::n << endl;
-    delete[] x;
-    delete[] y;
-    delete[] z;
-     delete evdisplay;
-    getline(run,line);
-    entry = ""; 
-
-    continue;}
-    else {
-
-      effc3 += 1;
-   for (int a = 0; a < (ch1); a++) {
-     for (int b = 0; b < (ch2); b++) {
-       for (int c = 0; c < (ch3); c++) {
-   	 	 n1.SetPoints(hit[a],hit[b+ch1],hit[c+ch1+ch2]); //considero tutte le combinazioni di triplette
-   		  //		  cout << "PRIMA FIT" << endl;
-   		  n1.XYFit();
-   		  n1.YZFit();
-   		  //  cout << "DOPO FIT" << endl;
-		  if (!n1.vert)
-		  tempchi = (n1.XYGetChisquare_m()/*+n1.XZGetChisquare_m()*/ +n1.YZGetChisquare_m())/2; //tolto xz per sicurezza: potrebbe essere verticale
-		  else tempchi = n1.YZGetChisquare()/2;
-   		  //		  cout << "DOPO CHI" << endl;
-   		  if (tempchi < chi && tempchi != 0) {chi = tempchi; xytempchi = n1.XYGetChisquare_m(); yztempchi = n1.YZGetChisquare_m(); /* xztempchi = n1.XZGetChisquare_m();*/ theta = n1.GetTheta(); phi = n1.GetPhi();/*parameter = n1.YZGetParameter(1);*/bestvert = n1.vert;}
-       }}}
    // if (parameter > 100000) {cout << "THETA: " << theta << endl; cout << "PHI: " << phi << endl; cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "k: " << k << endl;}
    disxy1->Fill(n1.GetCoordinate(0,0),n1.GetCoordinate(1,0));
    disxy2->Fill(n1.GetCoordinate(0,1),n1.GetCoordinate(1,1));
@@ -220,24 +172,8 @@ void top_bot_tracks(){
    disy3->Fill(n1.GetCoordinate(1,2));
    
       dischi->Fill(chi);
-  
-   //Riempiamo gli istogrammi di theta e phi se il fit è andato bene. Se è verticale considero solamente una sezione
-      //     if (phi > 1.5 && phi < 1.64 && yztempchi > 30 && bestvert) {cout << "y sospette: " << besty[0] << '\t' << besty[1] << '\t' << besty[2] << endl; cout << "evnum: " << evnum << endl; cin.get();}
-      if( ((xytempchi>0 || bestvert) && yztempchi/**xztempchi*/ > 0) && (xytempchi < 2.5 || bestvert) && (yztempchi < 2.5)/* && (xztempchi < 10)*/ ){
-     // cout << "Fit con chi2: " << chi << endl;
-     // cout << "Theta: " << n1.GetTheta() << endl;
-     // cout << "Phi: " << n1.GetPhi() << endl;
-	//   if (theta <= 0.025){cout << "TROVATO THETA = 0 in evento" << evnum << " con theta: " << theta << " e phi: " << phi << " xyparamter: " << n1.XYGetParameter(1) << " yzparameter: " << n1.YZGetParameter(1) << endl; cin.get();}   
-	//	if (theta < 1E-4) {cout << "y SOSPETTE: " << besty[0] << " " << besty[1] << " " << besty[2] << endl; cout << "theta acc: " << theta << endl; cout << "evento da contr: " << evnum << endl; cin.get();}
-	//	if (theta > 1.22) {cout << "HUGE THETA at evnum: " << evnum << endl;}
-	efft3 += 1;
-	distheta->Fill(theta*180/3.14159);
-	disphi->Fill(phi*180/3.14159);
-       }
-      else efft2 += 1;
-   //  jj += 1;
-   //  if (jj == 1) {chi2 << chi << endl; n1.XYDraw(); n1.YZDraw();}
-   }
+ 
+
   j = 0;
     delete[] x;
     delete[] y;
@@ -257,12 +193,16 @@ void top_bot_tracks(){
    disz->SetBinContent(8,disz->GetBinContent(8)+ch2);
    disz->SetBinContent(12,disz->GetBinContent(12)+ch3);
    
+
+   if (ch1 >= 1) c1 += 1;
+   if (ch2 >= 1) c2 += 1;
+   if (ch3 >= 1) c3 += 1;
    // cout << "FINE DEL DO" << endl;
-  }	  }
+     }
 
 
 
-     //	  	  while (!run.eof());
+     	  	  while (!run.eof());
      // TCanvas* thetacanv = new TCanvas();
      // thetacanv->SetGrid();
      // thetacanv->cd();
@@ -300,7 +240,8 @@ void top_bot_tracks(){
      rfile.Close();
      run.close();
     
-     cout << "EFFICIENZA COINCIDENZA: " << double(effc3)/double(effc2) << endl;
-     cout << "EFFICIENZA TRACKING: " << double(efft3)/double(efft2) << endl;
+     cout << "EFFICIENZA 1: " << double(c1)/10000.0 << endl;
+     cout << "EFFICIENZA 2: " << double(c2)/10000.0 << endl;
+     cout << "EFFICIENZA 3: " << double(c3)/10000.0 << endl;
 }
   
