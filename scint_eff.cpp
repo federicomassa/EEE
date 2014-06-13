@@ -26,6 +26,7 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 void scint_eff(){
+  int eff_tb = 0, eff_tmb = 0;
   int c1 = 0, c2 = 0, c3 = 0;
   int evnum = 0;
   int eff3 = 0, eff2 = 0;
@@ -170,8 +171,10 @@ void scint_eff(){
    disy1->Fill(n1.GetCoordinate(1,0));
    disy2->Fill(n1.GetCoordinate(1,1));
    disy3->Fill(n1.GetCoordinate(1,2));
-   
-      dischi->Fill(chi);
+
+
+   if (ch1 >= 1 && ch3 >= 1 && ch2 == 0) eff_tb+= 1;
+   if (ch1 >= 1 && ch2>= 1 && ch3 >= 1) eff_tmb += 1;
  
 
   j = 0;
@@ -243,5 +246,7 @@ void scint_eff(){
      cout << "EFFICIENZA 1: " << double(c1)/10000.0 << endl;
      cout << "EFFICIENZA 2: " << double(c2)/10000.0 << endl;
      cout << "EFFICIENZA 3: " << double(c3)/10000.0 << endl;
+     
+     cout << "EFFICIENZA CON TRIGGER CAMERE: " << double(eff_tmb)/(double(eff_tmb + eff_tb)) << endl;
 }
   
