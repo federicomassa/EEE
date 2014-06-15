@@ -35,7 +35,8 @@ void correz(){
   strcpy(ofile,dest2);
    char infile1[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
    // char infile2[80] = "EEE_Prova_topbottom8900__20140530_174533.txt";
-   char infile2[80] = "EEE_Prova_topmid9000__20140530_181026.txt";
+   //  char infile2[80] = "EEE_Prova_topmid9000__20140530_181026.txt";
+  char infile2[80] = "EEE_Prova_midbottom9000__20140530_184644.txt";
   strcat(dest1,infile1);
   strcat(dest2,infile2);
   ifstream run(dest1); //INPUT FILE 

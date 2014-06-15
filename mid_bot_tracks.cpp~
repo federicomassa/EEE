@@ -25,16 +25,16 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 
-void top_mid_tracks(){
-  double x3, y3, z3;
+void mid_bot_tracks(){
+  double x1, y1, z1;
   int count2 = 0;
   int evnum = 0;
   int eff3 = 0, eff2 = 0;
-  bool bestvert = false;
+  bool bestvert;
   // double *besty = new double[3];
   // double parameter = 0;
-   ifstream run("../Data/CORR_EEE_Prova_topmid9000__20140530_181026.txt"); //INPUT FILE  
-  TFile rfile("Disttopmid_9000.root","RECREATE");
+   ifstream run("../Data/CORR_EEE_Prova_midbottom9000__20140530_184644.txt"); //INPUT FILE  
+  TFile rfile("Distmidbot_9000.root","RECREATE");
   TH2F* zeroch3 = new TH2F("zeroch3","Hit distribution when ch3 = 0", 30,0,15,30,0,15);
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
@@ -142,7 +142,7 @@ void top_mid_tracks(){
   // hit sono in ordine di camera nel file
   for (int h = ch1; h > 0; h--){
     for(int p = ch1-1; p < h && p >= 0; p--){
-	  disdist1->Fill(pow(pow(hit[h].x-hit[p].x,2)+pow(hit[h].y-hit[p].y,2),0.5));
+  	  disdist1->Fill(pow(pow(hit[h].x-hit[p].x,2)+pow(hit[h].y-hit[p].y,2),0.5));
     disdistx1->Fill(hit[h].x-hit[p].x);
     disdisty1->Fill(hit[h].y-hit[p].y);
     }}
@@ -163,7 +163,7 @@ void top_mid_tracks(){
 	  
   //   cout << "DOPO FOR" << endl;
  //Controllo la bontà dell'evento: ha almeno un hit per camera (top_mid)?
-  if (ch1 == 0 || ch2 == 0){/*cout << "EVENTO NON BUONO" << endl;*/ 
+  if (ch2 == 0 || ch3 == 0){/*cout << "EVENTO NON BUONO" << endl;*/ 
     j = 0; 
     delete [] hit;
     // cout << point::n << endl;
@@ -179,16 +179,19 @@ void top_mid_tracks(){
   else {//evento con almeno un hit per camera (top_mid)
   
 
-    if (ch3==0) { //funziona solo con file corretti
+    if (ch1==0) { //funziona solo con file corretti
       zeroch3->Fill(ch1,ch2);
-      for (int a = 0; a < ch1; a++) {
-	for (int b = 0; b < ch2; b++) {
+      for (int a = 0; a < ch2; a++) {
+	for (int b = 0; b < ch3; b++) {
 
-	  z3 = zch3;
-	  x3 = (z3-XZGetIntercept(hit[a],hit[b+ch1]))/XZGetSlope(hit[a],hit[b+ch1]);
-	  y3 = (z3-YZGetIntercept(hit[a],hit[b+ch1]))/YZGetSlope(hit[a],hit[b+ch1]);
+	  z1 = zch1;
+
+	  if (hit[a].x == hit[b].x) x1 = hit[a].x;
+	  else x1 = (z1-XZGetIntercept(hit[a],hit[b+ch1]))/XZGetSlope(hit[a],hit[b+ch1]);
+
+	  y1 = (z1-YZGetIntercept(hit[a],hit[b+ch1]))/YZGetSlope(hit[a],hit[b+ch1]);
 	
-	  if ((sqr(x3) < sqr(82.0-82.0/24.0)) && (sqr(y3) < sqr(158.0))) count2 += 1;
+	  if ((sqr(x1) < sqr(82.0-82.0/24.0)) && (sqr(y1) < sqr(158.0))) count2 += 1;
 	  
 	}}
     }
@@ -197,7 +200,7 @@ void top_mid_tracks(){
     count2 = 0;
 
 
-    if(ch3 >= 1){
+    if(ch1 >= 1){
       eff3 += 1;
        //    for (int kk = 0; kk < 3; kk++) {
     //	cout << hit[kk].x << endl;
@@ -298,13 +301,13 @@ void top_mid_tracks(){
       //phicanv->cd();
   //   disphi->Draw();
    zeroch3->Write();
-   disdist1->Write();
+      disdist1->Write();
    disdist2->Write();
    disdist3->Write();
-   disdistx1->Write();
+     disdistx1->Write();
    disdistx2->Write();
    disdistx3->Write();
-   disdisty1->Write();
+    disdisty1->Write();
    disdisty2->Write();
    disdisty3->Write();
    disxy1->Write();

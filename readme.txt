@@ -1,0 +1,1 @@
+Controllare che la gerarchia delle efficienze sia rispettata, e vedere se c'è una qualche relazione tra l'efficienza calcolata con scintillatori e l'efficienza calcolata con trigger camere. Ad esempio, vedere se il rapporto tra i due metodi è sempre lo stesso per le 3 camere.
