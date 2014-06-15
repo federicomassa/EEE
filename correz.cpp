@@ -34,7 +34,8 @@ void correz(){
   char ofile[80];
   strcpy(ofile,dest2);
    char infile1[80] = "EEE_PISA01TestRun4Telescopes_20140507_014455.txt";
-   char infile2[80] = "EEE_Prova_topbottom8900__20140530_174533.txt";
+   // char infile2[80] = "EEE_Prova_topbottom8900__20140530_174533.txt";
+   char infile2[80] = "EEE_Prova_topmid9000__20140530_181026.txt";
   strcat(dest1,infile1);
   strcat(dest2,infile2);
   ifstream run(dest1); //INPUT FILE 
@@ -213,7 +214,7 @@ void correz(){
  // cout << '\n' << '\n';
  //  }
 
-   corrx = 82.0/(60.0+55.0);
+  corrx = (82.0-82.0/24.0)/(60.0+55.0);  // 82-82/24 è la nuova distanza tra le strip, 60+55 la vecchia
    for (int i = 0; i < 24; i++) {corry1 += up1[i]-low1[i]; corry2 += up2[i]-low2[i]; corry3 += up3[i] - low3[i];}
    corry1 = corry1/22;  //strip mancanti: media
    corry2 = corry2/23;
@@ -255,12 +256,12 @@ void correz(){
 	//	    cout << "OK" << endl;
 	if (j%3 == 2) {
     	chnum = hit[int(floor((double(j)-9)/3))].GetChNumber();
-	if (chnum == 1) crrfile << (numbery - (up1[stripnum]+low1[stripnum])/2)*corry1 << ' ';
-	if (chnum == 2) crrfile << (numbery - (up2[stripnum]+low2[stripnum])/2)*corry2 << ' ';
-	if (chnum == 3) crrfile << (numbery - (up3[stripnum]+low3[stripnum])/2)*corry3 << ' ';
+	if (chnum == 1) {number = 53.2; crrfile << (numbery - (up1[stripnum]+low1[stripnum])/2)*corry1 << ' ';}
+	if (chnum == 2) {number = 0; crrfile << (numbery - (up2[stripnum]+low2[stripnum])/2)*corry2 << ' ';}
+	if (chnum == 3) {number = -52.8; crrfile << (numbery - (up3[stripnum]+low3[stripnum])/2)*corry3 << ' ';}
 	crrfile << number << ' ';
 	} 
-	if (j%3 == 0) {numberx = number; stripnum = int((numberx+60.0)/5.0); crrfile << numberx*corrx << ' ';}
+	if (j%3 == 0) {numberx = number; stripnum = int((numberx+60.0)/5.0); crrfile << (numberx*corrx+41.0/24.0) << ' ';}
 	if (j%3 == 1) numbery = number;
       }
       entry = "";}

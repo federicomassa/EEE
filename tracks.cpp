@@ -33,12 +33,14 @@ void tracks(){
   //  int point::n = 0;
     // TFile rfile("Disttopbot.root","RECREATE");
  TFile rfile("Dist_all_trasl.root","RECREATE");
+ TF1* manyhitsline = new TF1("prova","[0]+[1]*x",0,15);
+  TH2F* manyhits2 = new TH2F("manyhits","Many-hits events correlation: Ch 2", 30,0,15,100,0,50);
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,10);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
   TH1F* hpc3 = new TH1F("hpc3", "Hit per chamber /Chamber 3;#Hits;#", 20,0,20);
-  TH1F* distheta = new TH1F("dist","Theta distribution", 50, 0,90);
-  TH1F* disphi = new TH1F("disp","Phi distribution", 90, 0, 360);
+  TH1F* distheta = new TH1F("dist","Theta distribution;Theta(deg);#", 50, 0,90);
+  TH1F* disphi = new TH1F("disp","Phi distribution;Phi(deg);#", 90, 0, 360);
   TH2F* disxy1 = new TH2F("disxy1","XY Occupancy: Ch 1", 200,-100,100,100,-400,400);
   TH1F* disx1 = new TH1F("disx1", "X Occupancy: Ch 1", 200,-100,100);
   TH1F* disy1 = new TH1F("disy1", "Y Occupancy: Ch 1", 50,-400,400);
@@ -58,7 +60,7 @@ void tracks(){
   TH1F* disdisty1 = new TH1F("disdisty1","Y Distance distribution, Ch1;Y Distance;#",800,-400,400);
   TH1F* disdisty2 = new TH1F("disdisty2","Y Distance distribution, Ch2;Y Distance;#",800,-400,400);
   TH1F* disdisty3 = new TH1F("disdisty3","Y Distance distribution, Ch3;Y Distance;#",800,-400,400);
-  TH2F* thetaphi = new TH2F("phi-teta","Phi-Theta Correlation;Phi(°);Theta(°)", 90,0,360,50,0,90);
+  TH2F* thetaphi = new TH2F("phi-teta","Phi-Theta Correlation;Phi(deg);Theta(deg)", 90,0,360,50,0,90);
   triplet n1;
   double chi = 1000, tempchi = 0,xytempchi = 0, /*xztempchi = 0, */ yztempchi = 0, theta = 1000, phi = 1000;
   int j = 0;
@@ -115,6 +117,9 @@ void tracks(){
       entry = "";}
       else entry = entry + line.substr(i,1);
   } //fine ciclo linea
+
+
+ 
 
   double* x = new double[linecount];
   double* y = new double[linecount];
@@ -177,6 +182,8 @@ void tracks(){
     //	cout << hit[kk].y << endl;
     //	cout << hit[kk].z << endl;}
    
+ manyhits2->Fill(ch2,ch1+ch2+ch3);
+
    for (int a = 0; a < (ch1); a++) {
      for (int b = 0; b < (ch2); b++) {
        for (int c = 0; c < (ch3); c++) {
@@ -258,6 +265,8 @@ void tracks(){
        //phicanv->SetGrid();
       //phicanv->cd();
   //   disphi->Draw();
+   manyhitsline->Write();
+   manyhits2->Write();
    thetaphi->Write();
    disdist1->Write();
    disdist2->Write();

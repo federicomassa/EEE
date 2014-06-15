@@ -16,7 +16,7 @@ using namespace std;
 
 int GetHitCount(string str){ //Calcola il numero di hits per evento
   int s = 0;
-  for (unsigned int i = 0; i < str.size(); i++) {
+  for (unsigned int i = 0; i < str.size()+1; i++) {
     if(!isalnum(str[i]) && str[i] != '.' && str[i] != '-') //se trova un carattere non alfanumerico o . allora è la fine di un blocco
       s = s+1;
   }
@@ -26,13 +26,16 @@ int GetHitCount(string str){ //Calcola il numero di hits per evento
 
 
 void top_mid_tracks(){
+  double x3, y3, z3;
+  int count2 = 0;
   int evnum = 0;
   int eff3 = 0, eff2 = 0;
   bool bestvert;
   double *besty = new double[3];
   double parameter = 0;
-   ifstream run("../Data/EEE_Prova_topmid9000__20140530_181026.txt"); //INPUT FILE  
-  TFile rfile("Disttopbot.root","RECREATE");
+   ifstream run("../Data/CORR_EEE_Prova_topmid9000__20140530_181026.txt"); //INPUT FILE  
+  TFile rfile("Disttopmid_9000.root","RECREATE");
+  TH2F* zeroch3 = new TH2F("zeroch3","Hit distribution when ch3 = 0", 30,0,15,30,0,15);
   TH1F* dischi = new TH1F("dischi","Chi2 distribution; chi2; #", 100,0,1000);
   TH1F* hpc1 = new TH1F("hpc1", "Hit per chamber / Chamber 1; #Hits;# ", 20,0,20);
   TH1F* hpc2 = new TH1F("hpc2", "Hit per chamber / Chamber 2;#Hits;#", 20,0,20);
@@ -75,9 +78,9 @@ void top_mid_tracks(){
   while (line.substr(11,5) != "EVENT");
   // for (int n = 0; n <= 108;n++) {getline(run,line);}
 
-     for (k = 0; k <= 10000; k++){
+  //   for (k = 0; k <= 10000; k++){
 
-  // do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
+   do  {k+= 1;// cout << "INIZIO DEL DO" << endl;
 	 //  if (m%5000 == 0) cout << m << " eventi analizzati..." << endl;
      if (line.find("EVENT") > 15 ) {getline(run,line);continue;}//Durante il run compaiono righe non di evento, se non lo trova find restituisce un numero molto grande
     ch1 = 0;
@@ -117,11 +120,11 @@ void top_mid_tracks(){
       else entry = entry + line.substr(i,1);
   } //fine ciclo linea
 
- 
+
   double* x = new double[linecount];
   double* y = new double[linecount];
   double* z = new double[linecount];
-  
+
 
    for (int q = 0; q < linecount; q++){
      x[q] = hit[q].x;
@@ -129,6 +132,8 @@ void top_mid_tracks(){
      z[q] = hit[q].z;}
    TGraph2D* evdisplay = new TGraph2D(linecount,x,y,z);
     evdisplay->SetTitle("Event Display;X;Y;Z");
+
+  
 
     // qui inserire event display
     //         if (evnum == 148) evdisplay->Write(); 
@@ -149,16 +154,16 @@ void top_mid_tracks(){
     disdisty2->Fill(hit[h+ch1].y-hit[p+ch1].y);
     }}
 
- for (int h = ch3; h > 0; h--){
-    for(int p = ch3-1; p < h && p >= 0; p--){
-	  disdist3->Fill(pow(pow(hit[h+ch1+ch2].x-hit[p+ch1+ch2].x,2)+pow(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y,2),0.5));
-    disdistx3->Fill(hit[h+ch1+ch2].x-hit[p+ch1+ch2].x);
-    disdisty3->Fill(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y);
-    }}
+ // for (int h = ch3; h > 0; h--){
+ //    for(int p = ch3-1; p < h && p >= 0; p--){
+ // 	  disdist3->Fill(pow(pow(hit[h+ch1+ch2].x-hit[p+ch1+ch2].x,2)+pow(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y,2),0.5));
+ //    disdistx3->Fill(hit[h+ch1+ch2].x-hit[p+ch1+ch2].x);
+ //    disdisty3->Fill(hit[h+ch1+ch2].y-hit[p+ch1+ch2].y);
+ //    }}
 	  
   //   cout << "DOPO FOR" << endl;
  //Controllo la bontà dell'evento: ha almeno un hit per camera (top_mid)?
-  if (ch1 < 1 || ch2 < 1){/*cout << "EVENTO NON BUONO" << endl;*/ 
+  if (ch1 == 0 || ch2 == 0){/*cout << "EVENTO NON BUONO" << endl;*/ 
     j = 0; 
     delete [] hit;
     // cout << point::n << endl;
@@ -172,9 +177,28 @@ void top_mid_tracks(){
     continue;} //Evento non buono: prossimo evento
   
   else {//evento con almeno un hit per camera (top_mid)
-    eff2 += 1;
-    if(ch3 > 0) { 
-    eff3 += 1;
+  
+
+    if (ch3==0) { //funziona solo con file corretti
+      zeroch3->Fill(ch1,ch2);
+      for (int a = 0; a < ch1; a++) {
+	for (int b = 0; b < ch2; b++) {
+
+	  z3 = zch3;
+	  x3 = (z3-XZGetIntercept(hit[a],hit[b+ch1]))/XZGetSlope(hit[a],hit[b+ch1]);
+	  y3 = (z3-YZGetIntercept(hit[a],hit[b+ch1]))/YZGetSlope(hit[a],hit[b+ch1]);
+	
+	  if ((sqr(x3) < sqr(82.0-82.0/24.0)) && (sqr(y3) < sqr(158.0))) count2 += 1;
+	  
+	}}
+    }
+    if (count2 >= 1) eff2 += 1;
+    
+    count2 = 0;
+
+
+    if(ch3 >= 1){
+      eff3 += 1;
        //    for (int kk = 0; kk < 3; kk++) {
     //	cout << hit[kk].x << endl;
     //	cout << hit[kk].y << endl;
@@ -223,6 +247,7 @@ void top_mid_tracks(){
    //  else {
    //  jj += 1;
    //  if (jj == 1) {chi2 << chi << endl; n1.XYDraw(); n1.YZDraw();}
+
   j = 0;
     delete[] x;
     delete[] y;
@@ -237,7 +262,6 @@ void top_mid_tracks(){
     }
 
     //vedere se la traccia entra nella terza camera o meno!
-    
   j = 0;
     delete[] x;
     delete[] y;
@@ -252,19 +276,18 @@ void top_mid_tracks(){
   //Bin per chamber histograms
    hpc1->Fill(ch1);
    hpc2->Fill(ch2);
-   hpc3->Fill(ch3);
+   //  hpc3->Fill(ch3);
    disz->SetBinContent(4,disz->GetBinContent(4)+ch1);
    disz->SetBinContent(8,disz->GetBinContent(8)+ch2);
    disz->SetBinContent(12,disz->GetBinContent(12)+ch3);
-  
-  }
-
    
-  } }// cout << "FINE DEL DO" << endl;
+  }
+   
+   } // cout << "FINE DEL DO" << endl;
 
 
 
-     //	  	  while (!run.eof());
+     	  	  while (!run.eof());
      // TCanvas* thetacanv = new TCanvas();
      // thetacanv->SetGrid();
      // thetacanv->cd();
@@ -274,6 +297,7 @@ void top_mid_tracks(){
        //phicanv->SetGrid();
       //phicanv->cd();
   //   disphi->Draw();
+   zeroch3->Write();
    disdist1->Write();
    disdist2->Write();
    disdist3->Write();
@@ -302,6 +326,6 @@ void top_mid_tracks(){
      rfile.Close();
      run.close();
     
-     cout << "EFFICIENZA: " << double(eff3)/double(eff2) << endl;
+     cout << "EFFICIENZA: " << double(eff3)/double(eff2+eff3) << endl;
 }
   
